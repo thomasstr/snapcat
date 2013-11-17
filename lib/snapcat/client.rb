@@ -27,9 +27,9 @@ module Snapcat
         { body: merge_defaults_with(data) }
       )
 
-      if !response.success?
-        raise Snapcat::Error, "Snapcat response was a failure: #{response.code}"
-      elsif response.body.empty?
+      check_status!(response)
+
+      if response.body.empty?
         result = { logged: true }
       else
         result = symbolize_keys(JSON.parse(response.body))
@@ -55,9 +55,7 @@ module Snapcat
         { body: merge_defaults_with({ username: @username, id: snap_id }) }
       )
 
-      if !response.success?
-        raise Snapcat::Error, "Snapcat response was a failure: #{response.code}"
-      end
+      check_status!(response)
 
       response.body
     end
@@ -90,13 +88,19 @@ module Snapcat
 
     def username=(new_username)
       if @logged_in
-        raise SnapError, 'You cannot change a username while logged out'
+        raise SnapError, 'You cannot change a username after logging in'
       else
         @username = new_username
       end
     end
 
     private
+
+    def check_status!(response)
+      if !response.success?
+        raise Snapcat::Error, "Snapcat response was a failure: #{response.code}"
+      end
+    end
 
     def built_token(auth_token, timestamp)
       hash_a = Digest::SHA256.new << "#{SECRET}#{auth_token}"
