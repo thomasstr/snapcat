@@ -25,10 +25,9 @@ Alternatively, install it via command line:
 Usage
 -----
 
+**User Auth**
+
 ```ruby
-
-### User Auth
-
 # Initialize a user and login
 user = Snapcat::User.new('your-username')
 user.login('topsecretpassword')
@@ -36,10 +35,12 @@ user.login('topsecretpassword')
 # Initialize a new user, register, and login
 user = Snapcat::User.new('your-new-username')
 user.register('1990-01-20', 'test@example.com', 'topsecretpassword')
+```
 
 
-### User Actions
+**User Actions**
 
+```ruby
 # Block a user
 user.block('username-to-block')
 
@@ -60,12 +61,14 @@ user.update_email('newemail@example.com')
 #   Snapcat::User::Privacy::EVERYONE
 #   Snapcat::User::Privacy::FRIENDS
 user.update_privacy(Snapcat::User::Privacy::EVERYONE)
+```
 
+**User Data**
 
-### User Data
-# Note: must run `fetch_updates` to capture user data
+You run `user.fetch_updates` to retrieve user data before accessing it
 
-# Examine all raw user data
+```ruby
+# Examine all raw user update data
 user.updates
 
 # Examine snaps received
@@ -76,9 +79,12 @@ user.snaps_sent
 
 # Examine friends
 user.friends
+```
 
+**Friends**
 
-### Friends
+```ruby
+# Grab a friend
 friend = user.friends.first
 
 # Delete a friend :(
@@ -92,9 +98,13 @@ friend.type.confirmed?
 friend.type.unconfirmed?
 friend.type.blocked?
 friend.type.deleted?
+```
 
 
-### Snaps
+**Snaps**
+
+```ruby
+# Grab a snap
 snap = user.snaps_received.first
 
 # Get the file data from the snap
@@ -123,7 +133,8 @@ Credits
 -------
 
 * [Neal Kemp](http://nealke.mp)
-* PHP lib
+* Based on work by martinp on [pysnap](https://github.com/martinp/pysnap) and by
+  djstelles on [php-snapchat](https://github.com/dstelljes/php-snapchat)
 * Python lib
 
 Copyright &copy; 2013 Neal Kemp
