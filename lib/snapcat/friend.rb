@@ -9,12 +9,12 @@ module Snapcat
 
     attr_reader *ALLOWED_FIELD_CONVERSIONS.values
 
-    def initialize(client, username, options = {})
+    def initialize(client, username, data = {})
       ALLOWED_FIELD_CONVERSIONS.each do |api_field, human_field|
         # If there's a conflict, the human field overrides the api field
         instance_variable_set(
           "@#{human_field}",
-          options[human_field] || options[api_field]
+          data[human_field] || data[api_field]
         )
       end
 
