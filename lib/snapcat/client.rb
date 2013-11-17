@@ -29,11 +29,7 @@ module Snapcat
 
       check_status!(response)
 
-      if response.body.empty?
-        result = { logged: true }
-      else
-        result = symbolize_keys(JSON.parse(response.body))
-      end
+      result = formatted_result(response.body)
 
       @auth_token = result[:auth_token] || @auth_token
       result
@@ -112,6 +108,14 @@ module Snapcat
         else
           final_string << hash_a.to_s[index].to_s
         end
+      end
+    end
+
+    def formatted_result(content)
+      if content.empty?
+        { logged: true }
+      else
+        symbolize_keys(JSON.parse(content))
       end
     end
 
