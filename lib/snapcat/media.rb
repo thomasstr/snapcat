@@ -7,7 +7,7 @@ module Snapcat
     end
 
     def image?
-      @data.length > 1 && @data[0..2] == "\xFF\xD8"
+      @data[0..2] == "\xFF\xD8"
     end
 
     def valid?
@@ -15,7 +15,7 @@ module Snapcat
     end
 
     def video?
-      @data.length > 1 && @data[0..2] == "\x00\x00"
+      @data[0..2] == "\x00\x00"
     end
 
     private

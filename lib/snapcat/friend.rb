@@ -7,25 +7,32 @@ module Snapcat
       type: :type
     }
 
-    attr_friend *ALLOWED_FIELD_CONVERSIONS.values
+    attr_reader *ALLOWED_FIELD_CONVERSIONS.values
 
-    def initialize(options = {})
+    def initialize(client, username, options = {})
       ALLOWED_FIELD_CONVERSIONS.each do |api_field, human_field|
-        instance_variable_set("@#{human_field}", options[:data][api_field])
-        # Allow user-supplied human field to override api field
-        instance_variable_set("@#{human_field}", options[:data][human_field])
+        # If there's a conflict, the human field overrides the api field
+        instance_variable_set(
+          "@#{human_field}",
+          options[human_field] || options[api_field]
+        )
       end
 
-      @client = options[:client]
+      @client = client
+      @username = username
       @type = Type.new(@type)
     end
 
     def delete
-      @client.request_with_username('delete', friend: @name)
+      Client.success? @client.request_with_username(
+        'friend',
+        action: 'delete',
+        friend: @username
+      )
     end
 
     def set_display_name(display_name)
-      @client.request_with_username(
+      Client.success? @client.request_with_username(
         'friend',
         action: 'display',
         display: display_name,

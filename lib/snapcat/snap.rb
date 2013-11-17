@@ -18,16 +18,18 @@ module Snapcat
 
     attr_reader *ALLOWED_FIELD_CONVERSIONS.values
 
-    def initialize(id, options = {})
+    def initialize(client, id, options = {})
       ALLOWED_FIELD_CONVERSIONS.each do |api_field, human_field|
-        instance_variable_set("@#{human_field}", options[:data][api_field])
         # Allow user-supplied human field to override api field
-        instance_variable_set("@#{human_field}", options[:data][snap_field])
+        instance_variable_set(
+          "@#{human_field}",
+          options[human_field] || options[api_field]
+        )
       end
 
       @id = id
       @status = Status.new(@status)
-      @client = options[:client]
+      @client = client
     end
 
     def media

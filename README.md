@@ -28,12 +28,14 @@ Usage
 **User Auth**
 
 ```ruby
-# Initialize a user and login
-user = Snapcat::User.new('your-username')
+# Initialize a client and login
+client = Snapchat::Client.new('your-username')
+user = client.user
 user.login('topsecretpassword')
 
 # Initialize a new user, register, and login
-user = Snapcat::User.new('your-new-username')
+client = Snapchat::Client.new('your-new-username')
+user = client.user
 user.register('1990-01-20', 'test@example.com', 'topsecretpassword')
 ```
 
@@ -64,8 +66,6 @@ user.update_privacy(Snapcat::User::Privacy::EVERYONE)
 ```
 
 **User Data**
-
-You run `user.fetch_updates` to retrieve user data before accessing it
 
 ```ruby
 # Examine all raw user update data
@@ -110,10 +110,10 @@ snap = user.snaps_received.first
 # Get the file data from the snap
 snap.media
 
-# Record a screenshot taken
+# Record a screenshot taken of the snap
 snap.screenshot
 
-# Record a view
+# Record the snap being viewed
 snap.view
 ```
 

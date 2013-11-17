@@ -8,9 +8,16 @@ module Snapcat
     include HTTParty
     base_uri 'https://feelinsonice-hrd.appspot.com/bq/'
 
+    attr_reader :logged_in, :user
+
     def initialize(username)
       @auth_token = STATIC_TOKEN
+      @user = User.new(self)
       @username = username
+    end
+
+    def self.success?(result)
+      !!result[:logged]
     end
 
     def request(endpoint, data = {})
@@ -56,6 +63,14 @@ module Snapcat
 
     def request_with_username(endpoint, data= {})
       request(endpoint, data.merge({ username: @username }))
+    end
+
+    def username=(new_username)
+      if @logged_in
+        raise SnapError, 'You cannot change a username while logged out'
+      else
+        @username = new_username
+      end
     end
 
     private

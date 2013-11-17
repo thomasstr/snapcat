@@ -7,15 +7,15 @@ module Snapcat
 
     attr_reader :friends, :snaps_sent, :snaps_received, :updates
 
-    def initialize(username)
-      @client = Client.new(username)
+    def initialize(client)
+      @client = client
       @friends = []
       @snaps_sent = []
       @snaps_received = []
     end
 
     def block(username)
-      @client.request_with_username(
+      Client.success? @client.request_with_username(
         'friend',
         action: 'block',
         friend: username
@@ -23,7 +23,7 @@ module Snapcat
     end
 
     def clear_feed
-      @client.request_with_username('clear')
+      Client.success? @client.request_with_username('clear')
     end
 
     def fetch_updates(update_timestamp = 0)
@@ -32,21 +32,24 @@ module Snapcat
         update_timestamp: update_timestamp
       )
 
-      set_friends(result['friends'])
-
-      set_snaps(result['snaps'])
-
-      @updates = result
+      set_updates(result)
+      Client.success?(result)
     end
 
     def login(password)
       result = @client.request_with_username('login', password: password)
-      !!result['logged']
+
+      if Client.success?(result)
+        set_updates(result)
+        true
+      else
+        false
+      end
     end
 
     def logout
       result = @client.request_with_username('logout')
-      result['content'].nil?
+      Client.success?(result)
     end
 
     def register(birthday, email, password)
@@ -56,33 +59,39 @@ module Snapcat
         email: email,
         password: password
       )
-      unless result['token']
+      unless Client.success?(result)
         return false
       end
 
-      @client.request_with_username(
+      result_two = @client.request_with_username(
         'registeru',
         email: email
       )
+      Client.success?(result_two)
     end
 
     def unblock(username)
-      @client.request_with_username(
+      Client.success? @client.request_with_username(
         'friend',
         action: 'unblock',
         friend: username
       )
     end
 
+    def username=(new_username)
+      @client.username = new_username
+    end
+
     def update_email(email)
-      @client.request_with_username(
+      Client.success? @client.request_with_username(
+        'settings',
         action: 'updateEmail',
         email: email
       )
     end
 
     def update_privacy(code)
-      @client.request_with_username(
+      Client.success? @client.request_with_username(
         'settings',
         action: 'updatePrivacy',
         privacySetting: code
@@ -95,7 +104,7 @@ module Snapcat
       @friends = []
 
       friends.each do |friend|
-        @friends << Friend.new(data: friend, client: @client)
+        @friends << Friend.new(@client, friend)
       end
     end
 
@@ -105,11 +114,17 @@ module Snapcat
 
       snaps.each do |snap|
         if snap['c_id']
-          @snaps_sent << Snap.new(snap[:id], data: snap, client: @client)
+          @snaps_sent << Snap.new(@client, snap[:id], snap)
         else
-          @snaps_received << Snap.new(snap[:id], data: snap, client: @client)
+          @snaps_received << Snap.new(@client, snap)
         end
       end
+    end
+
+    def set_updates(result)
+      set_friends(result[:friends])
+      set_snaps(result[:snaps])
+      @updates = result
     end
   end
 end

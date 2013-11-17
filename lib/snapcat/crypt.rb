@@ -1,9 +1,9 @@
 module Snapcat
   module Crypt
+    extend self
+
     AES_MODE = '128-ECB'
     ENCRYPTION_KEY = 'M02cnQ51Ji97vwT4'
-
-    extend self
 
     def decrypt(data)
       cipher = new_cipher(:decrypt)
