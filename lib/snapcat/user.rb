@@ -48,8 +48,7 @@ module Snapcat
     end
 
     def logout
-      result = @client.request_with_username('logout')
-      Client.success?(result)
+      Client.success? @client.request_with_username('logout')
     end
 
     def register(birthday, email, password)

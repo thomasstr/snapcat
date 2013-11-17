@@ -1,11 +1,12 @@
 module Snapcat
   class Client
+    include HTTParty
+
     APP_VERSION = '6.0.0'
     SECRET = 'iEk21fuwZApXlz93750dmW22pw389dPwOk'
     STATIC_TOKEN = 'm198sOkJEn37DjqZ32lpRu76xmw288xSQ9'
     HASH_PATTERN = '0001110111101110001111010101111011010001001110011000110001000110'
 
-    include HTTParty
     base_uri 'https://feelinsonice-hrd.appspot.com/bq/'
 
     attr_reader :logged_in, :user
