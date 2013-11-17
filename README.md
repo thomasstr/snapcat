@@ -93,7 +93,13 @@ friend.delete
 # Set a friend's display name
 friend.set_display_name('Nik Ro')
 
-# Check what type of friend they are
+# Learn more about your friend
+friend.can_see_custom_stories
+friend.display_name
+friend.username
+
+# What kind of friend are they anyway??
+friend.type
 friend.type.confirmed?
 friend.type.unconfirmed?
 friend.type.blocked?
@@ -107,14 +113,38 @@ friend.type.deleted?
 # Grab a snap
 snap = user.snaps_received.first
 
-# Get the file data from the snap
-snap.media
-
 # Record a screenshot taken of the snap
 snap.screenshot
 
 # Record the snap being viewed
 snap.view
+
+# Learn more about the snap
+snap.broadcast
+snap.broadcast_action_text
+snap.broadcast_hide_timer
+snap.broadcast_url
+snap.screenshot_count
+snap.media_id
+snap.id
+snap.media_type
+snap.recipient
+snap.sender
+snap.status
+snap.sent
+snap.opened
+```
+
+**Media**
+
+```ruby
+# Get the file data from the snap
+media = snap.media
+
+#Learn more about the media
+media.image?
+media.valid?
+media.video?
 ```
 
 
