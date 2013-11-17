@@ -135,7 +135,6 @@ Credits
 * [Neal Kemp](http://nealke.mp)
 * Based on work by martinp on [pysnap](https://github.com/martinp/pysnap) and by
   djstelles on [php-snapchat](https://github.com/dstelljes/php-snapchat)
-* Python lib
 
 Copyright &copy; 2013 Neal Kemp
 
