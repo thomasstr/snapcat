@@ -18,7 +18,7 @@ module Snapcat
     private
 
     def finish_crypt(cipher, data)
-      cipher.key = BLOB_ENCRYPTION_KEY
+      cipher.key = ENCRYPTION_KEY
       cipher.update(pkcs5_pad(data)) + cipher.final
     end
 

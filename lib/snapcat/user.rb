@@ -69,12 +69,37 @@ module Snapcat
       Client.success?(result_two)
     end
 
+    def send_snap(media_id, recipients, view_duration = 3)
+      Client.success? @client.request_with_username(
+        'send',
+        media_id: media_id,
+        recipient: recipients.join(','),
+        time: view_duration
+      )
+    end
+
     def unblock(username)
       Client.success? @client.request_with_username(
         'friend',
         action: 'unblock',
         friend: username
       )
+    end
+
+    def upload(data, type = nil)
+      encrypted_data = Crypt.encrypt(data)
+
+      unless type
+        media = Media.new(encrypted_data)
+
+        if media.image?
+          type = MediaType::IMAGE
+        else
+          type = MediaType::VIDEO
+        end
+      end
+
+      @client.request_upload(encrypted_data, type)
     end
 
     def username=(new_username)

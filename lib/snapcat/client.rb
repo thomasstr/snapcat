@@ -1,6 +1,6 @@
 module Snapcat
   class Client
-    include HTTParty
+    include HTTMultiParty
 
     APP_VERSION = '6.0.0'
     SECRET = 'iEk21fuwZApXlz93750dmW22pw389dPwOk'
@@ -30,7 +30,7 @@ module Snapcat
       if !response.success?
         raise Snapcat::Error, "Snapcat response was a failure: #{response.code}"
       elsif response.body.empty?
-        result = {}
+        result = { logged: true }
       else
         result = symbolize_keys(JSON.parse(response.body))
       end
@@ -62,8 +62,30 @@ module Snapcat
       response.body
     end
 
-    def request_with_username(endpoint, data= {})
+    def request_with_username(endpoint, data = {})
       request(endpoint, data.merge({ username: @username }))
+    end
+
+    def request_upload(encrypted_data, type)
+      file_extension = MediaType.new(type).file_extension
+
+      begin
+        file = Tempfile.new(['snap', ".#{file_extension}"])
+        file.write(encrypted_data)
+        file.rewind
+
+        result = request_with_username(
+          'upload',
+          data: file,
+          media_id: media_id,
+          type: type
+        )
+      ensure
+        file.close
+        file.unlink
+      end
+
+      result[:media_id]
     end
 
     def username=(new_username)
@@ -87,6 +109,10 @@ module Snapcat
           final_string << hash_a.to_s[index].to_s
         end
       end
+    end
+
+    def media_id
+      "#{@username.upcase}~#{Timestamp.micro}"
     end
 
     def merge_defaults_with(data)

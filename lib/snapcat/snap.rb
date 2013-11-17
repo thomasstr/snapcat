@@ -29,6 +29,7 @@ module Snapcat
 
       @id = id
       @status = Status.new(@status)
+      @media_type = MediaType.new(@media_type)
       @client = client
     end
 

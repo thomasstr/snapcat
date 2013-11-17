@@ -68,6 +68,16 @@ describe Snapcat::User do
     end
   end
 
+  describe '#send_snap' do
+    it 'send a snap' do
+      login_user
+
+      result = @user.send_snap('media_id', %w(jim jane), 6)
+
+      result.must_equal true
+    end
+  end
+
   describe '#unblock' do
     describe 'for someone who isnt a friend' do
       it 'fails to block' do
@@ -107,6 +117,16 @@ describe Snapcat::User do
       result = @user.update_privacy(Snapcat::User::Privacy::EVERYONE)
 
       result.must_equal true
+    end
+  end
+
+  describe '#upload' do
+    it 'uploads a snap' do
+      login_user
+
+      result = @user.upload('asdf')
+
+      result.must_equal 'a_media_id'
     end
   end
 
