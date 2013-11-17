@@ -16,18 +16,18 @@ module Snapcat
       [IMAGE, FRIEND_REQUEST_IMAGE].include? @code
     end
 
-    def video?
-      [
-        VIDEO, VIDEO_NOAUDIO, FRIEND_REQUEST_VIDEO, FRIEND_REQUEST_VIDEO_NOAUDIO
-      ].include? @code
-    end
-
     def file_extension
       if image?
         'jpg'
       elsif video?
         'mp4'
       end
+    end
+
+    def video?
+      [
+        VIDEO, VIDEO_NOAUDIO, FRIEND_REQUEST_VIDEO, FRIEND_REQUEST_VIDEO_NOAUDIO
+      ].include? @code
     end
   end
 end
