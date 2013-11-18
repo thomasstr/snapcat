@@ -85,19 +85,7 @@ module Snapcat
     end
 
     def upload(data, type = nil)
-      encrypted_data = Crypt.encrypt(data)
-
-      unless type
-        media = Media.new(encrypted_data)
-
-        if media.image?
-          type = MediaType::IMAGE
-        else
-          type = MediaType::VIDEO
-        end
-      end
-
-      @client.request_upload(encrypted_data, type)
+      @client.request_upload(data, type)
     end
 
     def update_email(email)

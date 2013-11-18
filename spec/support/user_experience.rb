@@ -4,9 +4,13 @@ class UserExperience
   FRIEND_DISPLAY_NAME = 'Henrie McKitten'
   FRIEND_USERNAME = 'catsaregreat'
   IMAGE_DATA = nil
+  MEDIA_ID = 'ILUVKITTENS~1384635477196'
+  MEDIA_TYPE = Snapcat::MediaType::IMAGE
   PASSWORD = 'topsecret'
+  RECIPIENTS = %w(ronnie99 jimbo2000)
   SNAP_ID = '519861384740350100r'
   USERNAME = 'iluvkittens'
+  VIEW_DURATION = 6
 
   attr_reader :client, :user
 

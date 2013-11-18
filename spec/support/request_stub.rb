@@ -14,9 +14,11 @@ module RequestStub
     logout
     register
     registeru
+    send_snap
     unblock
     update_email
     update_privacy
+    upload
   end
 
   def stub_snap
@@ -30,13 +32,49 @@ module RequestStub
     set_display_name
   end
 
+  def upload
+    request_body = requestify(
+      {
+        data: '',
+        media_id: UserExperience::MEDIA_ID,
+        type: UserExperience::MEDIA_TYPE
+      },
+      username: true
+    )
+    stub_request(:post, "#{BASE_URI}/send").with(
+      body: request_body
+    ).to_return(
+      status: 200,
+      body: ResponseHelper.json_for(:send_snap),
+      headers: json_headers
+    )
+  end
+
+  def send_snap
+    request_body = requestify(
+      {
+        media_id: UserExperience::MEDIA_ID,
+        recipient: UserExperience::RECIPIENTS.join(','),
+        time: UserExperience::VIEW_DURATION
+      },
+      username: true
+    )
+    stub_request(:post, "#{BASE_URI}/send").with(
+      body: request_body
+    ).to_return(
+      status: 200,
+      body: ResponseHelper.json_for(:send_snap),
+      headers: json_headers
+    )
+  end
+
   def media
     request_body = requestify({ id: UserExperience::SNAP_ID }, username: true)
     stub_request(:post, "#{BASE_URI}/blob").with(
       body: request_body
     ).to_return(
       status: 200,
-      body: '',
+      body: DataHelper.data_for(:encrypted),
       headers: {}
     )
   end
@@ -251,7 +289,7 @@ module RequestStub
     data.merge!(default_request_hash)
 
     data = data.map do |key, value|
-      escaped_value = URI::encode(value.to_s).gsub(/@/, '%40')
+      escaped_value = URI::encode(value.to_s).gsub(/@/, '%40').gsub(/,/, '%2C')
       [key, escaped_value].join('=')
     end
 

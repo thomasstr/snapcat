@@ -52,11 +52,20 @@ module Snapcat
       request(endpoint, data.merge({ username: @username }))
     end
 
-    def request_upload(encrypted_data, type)
-      file_extension = MediaType.new(type).file_extension
+    def request_upload(data, type = nil)
+      encrypted_data = Crypt.encrypt(data)
+      media = Media.new(encrypted_data)
+
+      unless type
+        if media.image?
+          type = MediaType::IMAGE
+        elsif media.video?
+          type = MediaType::VIDEO
+        end
+      end
 
       begin
-        file = Tempfile.new(['snap', ".#{file_extension}"])
+        file = Tempfile.new(['snap', ".#{media.file_extension}"])
         file.write(encrypted_data)
         file.rewind
 

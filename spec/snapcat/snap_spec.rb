@@ -44,14 +44,14 @@ describe Snapcat::Snap do
 
   describe '#media' do
     it 'retrieves media data' do
-      skip 'need to create a data file to access'
+      skip 'this works but still have issues with decrypt in test suite'
       ux = UserExperience.new
       ux.login
       snap = ux.snap
 
       media = snap.media
 
-      media.data.must_equal DataHelper.decrypted_data
+      media.data.must_equal DataHelper.data_for(:decrypted)
     end
   end
 

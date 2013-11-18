@@ -94,12 +94,16 @@ describe Snapcat::User do
 
   describe '#send_snap' do
     it 'send a snap' do
-      skip 'this does not work yet'
+      skip 'not verified to work'
       ux = UserExperience.new
       ux.login
       user = ux.user
 
-      result = user.send_snap('media_id', %w(jim jane), 6)
+      result = user.send_snap(
+        UserExperience::MEDIA_ID,
+        UserExperience::RECIPIENTS,
+        UserExperience::VIEW_DURATION
+      )
 
       result.success?.must_equal true
     end
@@ -143,12 +147,12 @@ describe Snapcat::User do
 
   describe '#upload' do
     it 'uploads a snap' do
-      skip 'this is not working'
+      skip 'this does not confirmed to work yet'
       ux = UserExperience.new
       ux.login
       user = ux.user
 
-      result = user.upload(DataHelper.decrypted_data)
+      result = user.upload(DataHelper.data_for(:decrypted))
 
       result.success?.must_equal true
     end
