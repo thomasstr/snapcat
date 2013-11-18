@@ -23,7 +23,12 @@ module Snapcat
         { body: merge_defaults_with(data) }
       )
 
-      result = Snapcat::Response.new(response, media_id: data[:media_id])
+      if data[:media_id]
+        additional_fields = { media_id: data[:media_id] }
+      else
+        additional_fields = {}
+      end
+      result = Snapcat::Response.new(response, additional_fields)
 
       auth_token_from(result, endpoint)
       result
