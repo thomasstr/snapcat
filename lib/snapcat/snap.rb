@@ -122,7 +122,7 @@ module Snapcat
 
     def get_media
       result = @client.request_media(@id)
-      Snapcat::Media.new(result)
+      Snapcat::Media.new(result.data[:media])
     end
   end
 end

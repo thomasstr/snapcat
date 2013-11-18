@@ -14,7 +14,8 @@ module RequestStub
     logout
     register
     registeru
-    send_snap
+    send_snap_to_multiple
+    send_snap_to_single
     unblock
     update_email
     update_privacy
@@ -33,11 +34,30 @@ module RequestStub
   end
 
   def upload
+    Snapcat::Client.any_instance.stubs(:generate_media_id).
+      returns(UserExperience::MEDIA_ID)
+
     request_body = requestify(
       {
-        data: '',
+        data: DataHelper.data_for(:decrypted)
+      },
+      username: true
+    )
+    stub_request(:post, "#{BASE_URI}/upload").with(
+      body: request_body
+    ).to_return(
+      status: 200,
+      body: ResponseHelper.json_for(:upload),
+      headers: json_headers
+    )
+  end
+
+  def send_snap_to_multiple
+    request_body = requestify(
+      {
         media_id: UserExperience::MEDIA_ID,
-        type: UserExperience::MEDIA_TYPE
+        recipient: UserExperience::RECIPIENTS.join(','),
+        time: UserExperience::VIEW_DURATION
       },
       username: true
     )
@@ -50,11 +70,11 @@ module RequestStub
     )
   end
 
-  def send_snap
+  def send_snap_to_single
     request_body = requestify(
       {
         media_id: UserExperience::MEDIA_ID,
-        recipient: UserExperience::RECIPIENTS.join(','),
+        recipient: UserExperience::RECIPIENT,
         time: UserExperience::VIEW_DURATION
       },
       username: true
@@ -75,7 +95,7 @@ module RequestStub
     ).to_return(
       status: 200,
       body: DataHelper.data_for(:encrypted),
-      headers: {}
+      headers: { 'Content-Type' => 'application/octet-stream' }
     )
   end
 

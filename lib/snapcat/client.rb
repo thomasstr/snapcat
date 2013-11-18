@@ -23,7 +23,7 @@ module Snapcat
         { body: merge_defaults_with(data) }
       )
 
-      result = Snapcat::Response.new(response)
+      result = Snapcat::Response.new(response, media_id: data[:media_id])
 
       auth_token_from(result, endpoint)
       result
@@ -43,9 +43,7 @@ module Snapcat
         { body: merge_defaults_with({ id: snap_id, username: @username }) }
       )
 
-      if response.success?
-        response.body
-      end
+      Response.new(response)
     end
 
     def request_with_username(endpoint, data = {})
@@ -63,6 +61,8 @@ module Snapcat
           type = MediaType::VIDEO
         end
       end
+
+      media_id = generate_media_id
 
       begin
         file = Tempfile.new(['snap', ".#{media.file_extension}"])
@@ -106,8 +106,8 @@ module Snapcat
       end
     end
 
-    def media_id
-      "#{@username.upcase}~#{Timestamp.micro}"
+    def generate_media_id
+      "#{@username.upcase}~#{Timestamp.macro}"
     end
 
     def merge_defaults_with(data)

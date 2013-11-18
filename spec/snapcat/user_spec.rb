@@ -93,8 +93,21 @@ describe Snapcat::User do
   end
 
   describe '#send_snap' do
-    it 'send a snap' do
-      skip 'not verified to work'
+    it 'send a snaps to single user' do
+      ux = UserExperience.new
+      ux.login
+      user = ux.user
+
+      result = user.send_snap(
+        UserExperience::MEDIA_ID,
+        UserExperience::RECIPIENT,
+        UserExperience::VIEW_DURATION
+      )
+
+      result.success?.must_equal true
+    end
+
+    it 'send a snaps to multiple users' do
       ux = UserExperience.new
       ux.login
       user = ux.user
@@ -147,7 +160,7 @@ describe Snapcat::User do
 
   describe '#upload' do
     it 'uploads a snap' do
-      skip 'this does not confirmed to work yet'
+      skip 'this works but need to stub out octet-stream not as a string'
       ux = UserExperience.new
       ux.login
       user = ux.user

@@ -71,7 +71,7 @@ module Snapcat
       @client.request_with_username(
         'send',
         media_id: media_id,
-        recipient: recipients.join(','),
+        recipient: prepare_recipients(recipients),
         time: view_duration
       )
     end
@@ -105,6 +105,14 @@ module Snapcat
     end
 
     private
+
+    def prepare_recipients(recipients)
+      if recipients.is_a? Array
+        recipients.join(',')
+      else
+        recipients
+      end
+    end
 
     def set_friends(friends)
       @friends = []
