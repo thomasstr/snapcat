@@ -25,7 +25,7 @@ module Snapcat
 
       result = Snapcat::Response.new(response)
 
-      @auth_token = result.auth_token || @auth_token
+      auth_token_from(result, endpoint)
       result
     end
 
@@ -75,6 +75,14 @@ module Snapcat
     end
 
     private
+
+    def auth_token_from(result, endpoint)
+      if endpoint == 'logout'
+        @auth_token = STATIC_TOKEN
+      else
+        @auth_token = result.auth_token || @auth_token
+      end
+    end
 
     def built_token(auth_token, timestamp)
       hash_a = Digest::SHA256.new << "#{SECRET}#{auth_token}"
