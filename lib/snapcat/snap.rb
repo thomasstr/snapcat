@@ -77,6 +77,7 @@ module Snapcat
         {
           eventName: 'SNAP_EXPIRED',
           params: { id: @id },
+          ts: Timestamp.macro
         }
       ]
 
