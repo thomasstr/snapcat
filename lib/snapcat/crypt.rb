@@ -2,34 +2,34 @@ module Snapcat
   module Crypt
     extend self
 
-    AES_MODE = '128-ECB'
+    CIPHER = 'AES-128-ECB'
     ENCRYPTION_KEY = 'M02cnQ51Ji97vwT4'
 
     def decrypt(data)
-      cipher = new_cipher(:decrypt)
-      finish_crypt(cipher, data)
+      cipher = OpenSSL::Cipher.new(CIPHER)
+      cipher.decrypt
+      cipher.key = ENCRYPTION_KEY
+      decrypted_data = ''
+
+      data.bytes.each_slice(16) do |slice|
+        decrypted_data += cipher.update(slice.map(&:chr).join)
+      end
+
+      decrypted_data += cipher.final
     end
 
     def encrypt(data)
-      cipher = new_cipher(:encrypt)
-      finish_crypt(cipher, data)
-    end
-
-    private
-
-    def finish_crypt(cipher, data)
+      cipher = OpenSSL::Cipher.new(CIPHER)
+      cipher.encrypt
       cipher.key = ENCRYPTION_KEY
       cipher.update(pkcs5_pad(data)) + cipher.final
     end
 
-    def new_cipher(mode)
-      cipher = OpenSSL::Cipher::AES.new(AES_MODE)
-      cipher.send(mode)
-    end
+    private
 
     def pkcs5_pad(data, blocksize = 16)
-      padding = data.length % blocksize
-      "#{data}#{padding.chr * padding}"
+      pad = blocksize - (data.length % blocksize)
+      "#{data}#{pad.chr * pad}"
     end
   end
 end
