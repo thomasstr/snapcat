@@ -9,16 +9,12 @@ module Snapcat
 
     base_uri 'https://feelinsonice-hrd.appspot.com/bq/'
 
-    attr_reader :logged_in, :user
+    attr_reader :user
 
     def initialize(username)
       @auth_token = STATIC_TOKEN
       @user = User.new(self)
       @username = username
-    end
-
-    def self.success?(result)
-      !!result[:logged]
     end
 
     def request(endpoint, data = {})
@@ -27,33 +23,29 @@ module Snapcat
         { body: merge_defaults_with(data) }
       )
 
-      check_status!(response)
+      result = Snapcat::Response.new(response)
 
-      result = formatted_result(response.body)
-
-      @auth_token = result[:auth_token] || @auth_token
+      @auth_token = result.auth_token || @auth_token
       result
     end
 
     def request_events(events, data = {})
-      result = request_with_username(
+      request_with_username(
         'update_snaps',
         events: events,
         json: data
       )
-
-      result.empty?
     end
 
     def request_media(snap_id)
       response = self.class.post(
         '/blob',
-        { body: merge_defaults_with({ username: @username, id: snap_id }) }
+        { body: merge_defaults_with({ id: snap_id, username: @username }) }
       )
 
-      check_status!(response)
-
-      response.body
+      if response.success?
+        response.body
+      end
     end
 
     def request_with_username(endpoint, data = {})
@@ -79,24 +71,10 @@ module Snapcat
         file.unlink
       end
 
-      result[:media_id]
-    end
-
-    def username=(new_username)
-      if @logged_in
-        raise SnapError, 'You cannot change a username after logging in'
-      else
-        @username = new_username
-      end
+      result
     end
 
     private
-
-    def check_status!(response)
-      if !response.success?
-        raise Snapcat::Error, "Snapcat response was a failure: #{response.code}"
-      end
-    end
 
     def built_token(auth_token, timestamp)
       hash_a = Digest::SHA256.new << "#{SECRET}#{auth_token}"
@@ -108,14 +86,6 @@ module Snapcat
         else
           final_string << hash_a.to_s[index].to_s
         end
-      end
-    end
-
-    def formatted_result(content)
-      if content.empty?
-        { logged: true }
-      else
-        symbolize_keys(JSON.parse(content))
       end
     end
 
@@ -131,14 +101,6 @@ module Snapcat
         timestamp: now,
         version: APP_VERSION
       })
-    end
-
-    def symbolize_keys(myhash)
-      myhash.keys.each do |key|
-        myhash[(key.to_sym rescue key) || key] = myhash.delete(key)
-      end
-
-      myhash
     end
   end
 end

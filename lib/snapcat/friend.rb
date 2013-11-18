@@ -24,7 +24,7 @@ module Snapcat
     end
 
     def delete
-      Client.success? @client.request_with_username(
+      @client.request_with_username(
         'friend',
         action: 'delete',
         friend: @username
@@ -32,7 +32,7 @@ module Snapcat
     end
 
     def set_display_name(display_name)
-      Client.success? @client.request_with_username(
+      @client.request_with_username(
         'friend',
         action: 'display',
         display: display_name,

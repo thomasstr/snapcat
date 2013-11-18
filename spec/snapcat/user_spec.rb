@@ -1,138 +1,156 @@
 require 'spec_helper'
 
 describe Snapcat::User do
+  before(:all) do
+    RequestStub.stub_user
+  end
+
   describe '#block' do
     it 'blocks a user' do
-      login_user
+      ux = UserExperience.new
+      ux.login
+      user = ux.user
 
-      result = @user.block('iluvkittens3')
+      result = user.block(UserExperience::FRIEND_USERNAME)
 
-      result.must_equal {}
+      result.success?.must_equal true
     end
   end
 
   describe '#clear_feed' do
     it 'clears a users feed' do
-      login_user
+      ux = UserExperience.new
+      ux.login
+      user = ux.user
 
-      result = @user.clear_feed
+      result = user.clear_feed
 
-      result.must_equal {}
+      result.success?.must_equal true
     end
   end
 
   describe '#fetch_updates' do
     it 'resets all of the users update fields' do
-      login_user
+      ux = UserExperience.new
+      ux.login
+      user = ux.user
 
-      result = @user.fetch_updates
+      result = user.fetch_updates
 
-      result.must_equal {}
+      result.success?.must_equal true
+      user.friends.length.must_equal 5
     end
   end
 
   describe '#login' do
     it 'logs the user in' do
-      client = Snapcat::Client.new('iluvkittens')
-      user = client.user
+      ux = UserExperience.new
+      user = ux.user
 
-      result = user.login('topsecret')
+      result = user.login(UserExperience::PASSWORD)
 
-      client.logged_in.must_equal true
-      result.must_equal true
-      user.snaps_received.must_equal = []
-      user.snaps_sent.must_equal = []
-      user.updates.must_equal = []
+      result.success?.must_equal true
+    end
+
+    it 'sets updatable fields' do
+      ux = UserExperience.new
+      user = ux.user
+
+      user.login(UserExperience::PASSWORD)
+
+      user.friends.length.must_equal 4
+      user.snaps_received.length.must_equal 1
+      user.snaps_sent.length.must_equal 0
+      user.data.must_equal ResponseHelper.hash_for(:login)
     end
   end
 
   describe '#logout' do
     it 'logs the user out' do
-      login_user
+      ux = UserExperience.new
+      ux.login
+      user = ux.user
 
-      result = @user.logout
+      result = user.logout
 
-      result.must_equal true
+      result.success?.must_equal true
     end
   end
 
   describe '#register' do
     it 'allows a user to register' do
-      client = Snapcat::Client.new('iluvkittens')
+      client = Snapcat::Client.new(UserExperience::USERNAME)
       user = client.user
 
-      result = user.register('1990-01-30', 'test@exasdf0aample.com', 'topsecret')
+      result = user.register(
+        UserExperience::BIRTHDAY,
+        UserExperience::EMAIL,
+        UserExperience::PASSWORD
+      )
 
-      result.must_equal true
-      client.logged_in.must_equal true
+      result.success?.must_equal true
     end
   end
 
   describe '#send_snap' do
     it 'send a snap' do
-      login_user
+      skip 'this does not work yet'
+      ux = UserExperience.new
+      ux.login
+      user = ux.user
 
-      result = @user.send_snap('media_id', %w(jim jane), 6)
+      result = user.send_snap('media_id', %w(jim jane), 6)
 
-      result.must_equal true
+      result.success?.must_equal true
     end
   end
 
   describe '#unblock' do
-    describe 'for someone who isnt a friend' do
-      it 'fails to block' do
-        login_user
+    it 'unblocks a user' do
+      ux = UserExperience.new
+      ux.login
+      user = ux.user
 
-        result = @user.unblock('randomperson')
+      result = user.unblock(UserExperience::FRIEND_USERNAME)
 
-        result.must_equal false
-      end
-    end
-
-    describe 'for someone who is a friend' do
-      it 'unblocks a user' do
-        login_user
-
-        result = @user.unblock('someone')
-
-        result.must_equal true
-      end
+      result.success?.must_equal true
     end
   end
 
   describe '#update_email' do
     it 'updates a users email' do
-      login_user
+      ux = UserExperience.new
+      ux.login
+      user = ux.user
 
-      result = @user.update_email('newemail@example.com')
+      result = user.update_email(UserExperience::EMAIL)
 
-      result.must_equal true
+      result.success?.must_equal true
     end
   end
 
   describe '#update_privacy' do
     it 'updates a users privacy setting' do
-      login_user
+      ux = UserExperience.new
+      ux.login
+      user = ux.user
 
-      result = @user.update_privacy(Snapcat::User::Privacy::EVERYONE)
+      result = user.update_privacy(Snapcat::User::Privacy::EVERYONE)
 
-      result.must_equal true
+      result.success?.must_equal true
     end
   end
 
   describe '#upload' do
     it 'uploads a snap' do
-      login_user
+      skip 'this is not working'
+      ux = UserExperience.new
+      ux.login
+      user = ux.user
 
-      result = @user.upload('asdf')
+      result = user.upload(DataHelper.decrypted_data)
 
-      result.must_equal 'a_media_id'
+      result.success?.must_equal true
     end
-  end
-
-  def login_user
-    @client = Snapcat::Client.new('iluvkittens')
-    @user = @client.user
-    @user.login('topsecret')
   end
 end

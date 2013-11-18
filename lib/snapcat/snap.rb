@@ -37,6 +37,10 @@ module Snapcat
       @media ||= get_media
     end
 
+    def received?
+      !sent?
+    end
+
     def screenshot(view_duration = 1)
       snap_data = {
         @id => {
@@ -54,6 +58,10 @@ module Snapcat
       ]
 
       @client.request_events(events, snap_data)
+    end
+
+    def sent?
+      !!media_id
     end
 
     def view(view_duration = 1)

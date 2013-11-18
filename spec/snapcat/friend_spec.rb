@@ -1,6 +1,10 @@
 require 'spec_helper'
 
 describe Snapcat::Friend do
+  before(:all) do
+    RequestStub.stub_friend
+  end
+
   describe '.new' do
     it 'sets allowed fields'
     it 'sets client'
@@ -9,28 +13,25 @@ describe Snapcat::Friend do
 
   describe '#delete' do
     it 'deletes this friend' do
-      login_user
+      ux = UserExperience.new
+      ux.login
+      friend = ux.friend
 
-      result = @friend.delete
+      result = friend.delete
 
-      result.must_be true
+      result.success?.must_equal true
     end
   end
 
   describe '#set_display_name' do
     it 'sets display name' do
-      login_user
+      ux = UserExperience.new
+      ux.login
+      friend = ux.friend
 
-      result = @friend.set_display_name('McKitten')
+      result = friend.set_display_name(UserExperience::FRIEND_DISPLAY_NAME)
 
-      result.must_be true
+      result.success?.must_equal true
     end
-  end
-
-  def login_user
-    @client = Snapcat::Client.new('iluvkittens')
-    @user = @client.user
-    @user.login('topsecret')
-    @friend = @user.friends.first
   end
 end
