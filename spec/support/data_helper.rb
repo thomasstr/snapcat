@@ -1,11 +1,20 @@
 module DataHelper
   extend self
 
-  def decrypted_data
-    'test'
+  def data_for(status, type = :image)
+    File.open(
+      "#{SPEC_ROOT}/support/snaps/#{type}_#{status}.#{file_extension(type)}",
+      'rb'
+    ).read
   end
 
-  def encrypted_data
-    'test'
+  private
+
+  def file_extension(type)
+    if type == :image
+      'jpg'
+    elsif type == :video
+      'mp4'
+    end
   end
 end
