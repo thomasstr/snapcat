@@ -47,7 +47,7 @@ module RequestStub
       body: request_body
     ).to_return(
       status: 200,
-      body: ResponseHelper.json_for(:upload),
+      body: '',
       headers: json_headers
     )
   end
@@ -65,7 +65,7 @@ module RequestStub
       body: request_body
     ).to_return(
       status: 200,
-      body: ResponseHelper.json_for(:send_snap),
+      body: '',
       headers: json_headers
     )
   end
@@ -83,7 +83,7 @@ module RequestStub
       body: request_body
     ).to_return(
       status: 200,
-      body: ResponseHelper.json_for(:send_snap),
+      body: '',
       headers: json_headers
     )
   end
@@ -147,7 +147,7 @@ module RequestStub
       body: request_body
     ).to_return(
       status: 200,
-      body: ResponseHelper.json_for(:login),
+      body: '',
       headers: json_headers
     )
   end
