@@ -20,11 +20,7 @@ module Snapcat
         { body: merge_defaults_with(data) }
       )
 
-      if data[:media_id]
-        additional_fields = { media_id: data[:media_id] }
-      else
-        additional_fields = {}
-      end
+      additional_fields = additional_fields_for(data)
       result = Snapcat::Response.new(response, additional_fields)
 
       auth_token_from(result, endpoint)
@@ -54,24 +50,16 @@ module Snapcat
 
     def request_upload(data, type = nil)
       encrypted_data = Crypt.encrypt(data)
-      media = Media.new(encrypted_data)
-
-      unless type
-        if media.image?
-          type = MediaType::IMAGE
-        elsif media.video?
-          type = MediaType::VIDEO
-        end
-      end
-
-      media_id = generate_media_id
+      media = Media.new(data)
+      type = type_for(media, type)
+      file_extension = media.file_extension
 
       begin
-        file = Tempfile.new(['snap', ".#{media.file_extension}"])
+        file = Tempfile.new(['snap', ".#{file_extension}"])
         file.write(encrypted_data)
         file.rewind
 
-        result = request_with_username(
+        return request_with_username(
           'upload',
           data: file,
           media_id: media_id,
@@ -81,11 +69,17 @@ module Snapcat
         file.close
         file.unlink
       end
-
-      result
     end
 
     private
+
+    def additional_fields_for(data)
+      if data[:media_id]
+        { media_id: data[:media_id] }
+      else
+        {}
+      end
+    end
 
     def auth_token_from(result, endpoint)
       if endpoint == 'logout'
@@ -108,7 +102,7 @@ module Snapcat
       end
     end
 
-    def generate_media_id
+    def media_id
       "#{@username.upcase}~#{Timestamp.macro}"
     end
 
@@ -120,6 +114,16 @@ module Snapcat
         timestamp: now,
         version: APP_VERSION
       })
+    end
+
+    def type_for(media, type)
+      unless type
+        if media.image?
+          MediaType::IMAGE
+        elsif media.video?
+          MediaType::VIDEO
+        end
+      end
     end
   end
 end
