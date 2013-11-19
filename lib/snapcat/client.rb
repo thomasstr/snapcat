@@ -93,7 +93,7 @@ module Snapcat
         }
       ]
 
-      @requestor.request_events(events, snap_data)
+      request_events(events, snap_data)
     end
 
     def send_media(data, recipients, options = {})
@@ -138,7 +138,7 @@ module Snapcat
         }
       ]
 
-      @requestor.request_events(events, snap_data)
+      request_events(events, snap_data)
     end
 
     def update_email(email)
@@ -165,6 +165,14 @@ module Snapcat
       else
         recipients
       end
+    end
+
+    def request_events(events, snap_data)
+      @requestor.request_with_username(
+        'update_snaps',
+        events: events,
+        json: snap_data
+      )
     end
 
     def set_user_data_with(result)

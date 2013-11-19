@@ -27,14 +27,6 @@ module Snapcat
       result
     end
 
-    def request_events(events, data = {})
-      request_with_username(
-        'update_snaps',
-        events: events,
-        json: data
-      )
-    end
-
     def request_media(snap_id)
       response = self.class.post(
         '/blob',
