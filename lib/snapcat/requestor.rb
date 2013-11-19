@@ -42,7 +42,7 @@ module Snapcat
 
     def request_upload(data, type = nil)
       encrypted_data = Crypt.encrypt(data)
-      media = Media.new(data)
+      media = Media.new(encrypted_data)
       type = type_for(media, type)
       file_extension = media.file_extension
 
