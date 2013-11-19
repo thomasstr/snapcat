@@ -27,7 +27,7 @@ describe Snapcat::Client do
     end
   end
 
-  describe '#delete' do
+  describe '#delete_friend' do
     it 'deletes this friend' do
       ux = UserExperience.new
       ux.login
@@ -111,30 +111,34 @@ describe Snapcat::Client do
   end
 
   describe '#send_media' do
-    it 'send a snap to single user' do
-      ux = UserExperience.new
-      ux.login
+    context 'with one recipient' do
+      it 'send a snap to single user' do
+        ux = UserExperience.new
+        ux.login
 
-      result = ux.client.send_media(
-        DataHelper.data_for(:decrypted),
-        UserExperience::RECIPIENT,
-        view_duration: UserExperience::VIEW_DURATION
-      )
+        result = ux.client.send_media(
+          DataHelper.data_for(:decrypted),
+          UserExperience::RECIPIENT,
+          view_duration: UserExperience::VIEW_DURATION
+        )
 
-      result.success?.must_equal true
+        result.success?.must_equal true
+      end
     end
 
-    it 'send a snap to multiple users' do
-      ux = UserExperience.new
-      ux.login
+    context 'with many recipients' do
+      it 'send a snap to recipients' do
+        ux = UserExperience.new
+        ux.login
 
-      result = ux.client.send_media(
-        DataHelper.data_for(:decrypted),
-        UserExperience::RECIPIENTS,
-        view_duration: UserExperience::VIEW_DURATION
-      )
+        result = ux.client.send_media(
+          DataHelper.data_for(:decrypted),
+          UserExperience::RECIPIENTS,
+          view_duration: UserExperience::VIEW_DURATION
+        )
 
-      result.success?.must_equal true
+        result.success?.must_equal true
+      end
     end
   end
 

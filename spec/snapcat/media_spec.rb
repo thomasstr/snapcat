@@ -6,31 +6,31 @@ describe Snapcat::Media do
   end
 
   describe '#valid?' do
-    describe 'when invalid' do
+    context 'when invalid' do
       it 'returns false'
     end
 
-    describe 'when valid' do
+    context 'when valid' do
       it 'returns true'
     end
   end
 
   describe '#image?' do
-    describe 'when it is an image' do
+    context 'when it is an image' do
       it 'returns true'
     end
 
-    describe 'when it is not an image' do
+    context 'when it is not an image' do
       it 'returns false'
     end
   end
 
   describe '#video?' do
-    describe 'when it is a video' do
+    context 'when it is a video' do
       it 'returns true'
     end
 
-    describe 'when it is not a video' do
+    context 'when it is not a video' do
       it 'returns false'
     end
   end
