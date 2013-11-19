@@ -29,15 +29,15 @@ Usage
 
 ```ruby
 # Initialize a client and login
-client = Snapchat::Client.new('your-username')
-client.login('topsecretpassword')
+snapcat = Snapcat::Client.new('your-username')
+snapcat.login('topsecretpassword')
 
-# Initialize a new user, register, and login
-client = Snapchat::Client.new('your-new-username')
-client.register('topsecretpassword', '1990-01-20', 'test@example.com')
+# Initialize a new client, register, and login
+snapcat = Snapcat::Client.new('your-new-username')
+snapcat.register('topsecretpassword', '1990-01-20', 'test@example.com')
 
 # Logout
-client.logout
+snapcat.logout
 ```
 
 
@@ -45,32 +45,32 @@ client.logout
 
 ```ruby
 # Block a user
-client.block('username-to-block')
+snapcat.block('username-to-block')
 
 # Clear feed
-client.clear_feed
+snapcat.clear_feed
 
 # Fetch a user's updates
-client.fetch_updates
+snapcat.fetch_updates
 
 # Unblock a user
-client.unblock('username-to-unlock')
+snapcat.unblock('username-to-unlock')
 
 # Update user's email
-client.update_email('newemail@example.com')
+snapcat.update_email('newemail@example.com')
 
 # Update user's privacy setting
 # Two choices:
 #   Snapcat::User::Privacy::EVERYONE
 #   Snapcat::User::Privacy::FRIENDS
-client.update_privacy(Snapcat::User::Privacy::EVERYONE)
+snapcat.update_privacy(Snapcat::User::Privacy::EVERYONE)
 ```
 
 **User Data**
 
 ```ruby
 # Get the user
-user = client.user
+user = snapcat.user
 
 # Examine all raw user data
 user.data
@@ -92,10 +92,10 @@ user.friends
 friend = user.friends.first
 
 # Set a friend's display name
-client.set_display_name(friend.username, 'Nik Ro')
+snapcat.set_display_name(friend.username, 'Nik Ro')
 
 # Delete a friend :(
-client.delete_friend(friend.username)
+snapcat.delete_friend(friend.username)
 
 # Learn more about your friend
 friend.can_see_custom_stories
@@ -118,7 +118,7 @@ friend.type.deleted?
 snap = user.snaps_received.first
 
 # Get the snap image or video data
-media = client.media_for(snap.id)
+media = snapcat.media_for(snap.id)
 
 #Learn more about the media
 media.image?
@@ -126,10 +126,10 @@ media.valid?
 media.video?
 
 # Record a screenshot taken of the snap
-client.screenshot(snap.id)
+snapcat.screenshot(snap.id)
 
 # Record the snap being viewed
-client.view(snap.id)
+snapcat.view(snap.id)
 ```
 
 **Sending Snaps**
@@ -137,10 +137,10 @@ client.view(snap.id)
 ```ruby
 # Send it to catsaregreat with 4 seconds duration
 # `data` is a string which can be read directly from an mp4 or jpg
-client.send_media(data, 'catsaregreat', view_duration: 4)
+snapcat.send_media(data, 'catsaregreat', view_duration: 4)
 
 # Or send it to multiple recipients
-client.send_media(data, ['catsaregreat', 'ronnie99'], view_duration: 4)
+snapcat.send_media(data, ['catsaregreat', 'ronnie99'], view_duration: 4)
 end
 ```
 
