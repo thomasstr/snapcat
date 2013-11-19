@@ -135,13 +135,12 @@ snapcat.view(snap.id)
 **Sending Snaps**
 
 ```ruby
-# Send it to catsaregreat with 4 seconds duration
+# Send it to catsaregreat with 3 seconds duration
 # `data` is a string which can be read directly from an mp4 or jpg
-snapcat.send_media(data, 'catsaregreat', view_duration: 4)
+snapcat.send_media(data, 'catsaregreat')
 
-# Or send it to multiple recipients
-snapcat.send_media(data, ['catsaregreat', 'ronnie99'], view_duration: 4)
-end
+# Or send it to multiple recipients and override default view_duration
+snapcat.send_media(data, %w(catsaregreat ronnie99), view_duration: 4)
 ```
 
 **Snaps General**
