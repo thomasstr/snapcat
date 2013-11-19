@@ -7,118 +7,25 @@ module Snapcat
 
     attr_reader :data, :friends, :snaps_sent, :snaps_received
 
-    def initialize(client)
-      @client = client
+    def initialize
       @friends = []
       @snaps_sent = []
       @snaps_received = []
     end
 
-    def block(username)
-      @client.request_with_username(
-        'friend',
-        action: 'block',
-        friend: username
-      )
-    end
-
-    def clear_feed
-      @client.request_with_username('clear')
-    end
-
-    def fetch_updates(update_timestamp = 0)
-      result = @client.request_with_username(
-        'updates',
-        update_timestamp: update_timestamp
-      )
-
-      set_updates(result)
-      result
-    end
-
-    def login(password)
-      result = @client.request_with_username('login', password: password)
-
-      set_updates(result)
-      result
-    end
-
-    def logout
-      @client.request_with_username('logout')
-    end
-
-    def register(birthday, email, password)
-      result = @client.request(
-        'register',
-        birthday: birthday,
-        email: email,
-        password: password
-      )
-      unless result.success?
-        return result
-      end
-
-      result_two = @client.request_with_username(
-        'registeru',
-        email: email
-      )
-
-      set_updates(result_two)
-      result_two
-    end
-
-    def send_snap(media_id, recipients, view_duration = 3)
-      @client.request_with_username(
-        'send',
-        media_id: media_id,
-        recipient: prepare_recipients(recipients),
-        time: view_duration
-      )
-    end
-
-    def unblock(username)
-      @client.request_with_username(
-        'friend',
-        action: 'unblock',
-        friend: username
-      )
-    end
-
-    def upload(data, type = nil)
-      @client.request_upload(data, type)
-    end
-
-    def update_email(email)
-      @client.request_with_username(
-        'settings',
-        action: 'updateEmail',
-        email: email
-      )
-    end
-
-    def update_privacy(code)
-      @client.request_with_username(
-        'settings',
-        action: 'updatePrivacy',
-        privacySetting: code
-      )
+    def data=(data)
+      set_friends(data[:friends])
+      set_snaps(data[:snaps])
+      @data = data
     end
 
     private
 
-    def prepare_recipients(recipients)
-      if recipients.is_a? Array
-        recipients.join(',')
-      else
-        recipients
-      end
-    end
-
     def set_friends(friends)
       @friends = []
 
-      friends.each do |friend|
-        @friends << Friend.new(@client, friend[:name], friend)
+      friends.each do |friend_data|
+        @friends << Friend.new(friend_data)
       end
     end
 
@@ -126,21 +33,13 @@ module Snapcat
       @snaps_received = []
       @snaps_sent = []
 
-      snaps.each do |snap|
-        snap = Snap.new(@client, snap[:id], snap)
+      snaps.each do |snap_data|
+        snap = Snap.new(snap_data)
         if snap.sent?
           @snaps_sent << snap
         else
           @snaps_received << snap
         end
-      end
-    end
-
-    def set_updates(result)
-      if result.success?
-        set_friends(result.data[:friends])
-        set_snaps(result.data[:snaps])
-        @data = result.data
       end
     end
   end

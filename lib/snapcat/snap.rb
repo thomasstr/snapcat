@@ -18,7 +18,7 @@ module Snapcat
 
     attr_reader *ALLOWED_FIELD_CONVERSIONS.values
 
-    def initialize(client, id, data = {})
+    def initialize(data = {})
       ALLOWED_FIELD_CONVERSIONS.each do |api_field, human_field|
         # Allow user-supplied human field to override api field
         instance_variable_set(
@@ -27,61 +27,16 @@ module Snapcat
         )
       end
 
-      @id = id
       @status = Status.new(@status)
       @media_type = MediaType.new(@media_type)
-      @client = client
-    end
-
-    def media
-      @media ||= get_media
     end
 
     def received?
       !sent?
     end
 
-    def screenshot(view_duration = 1)
-      snap_data = {
-        @id => {
-          c: Status::SCREENSHOT,
-          sv: view_duration,
-          t: Timestamp.float
-        }
-      }
-      events = [
-        {
-          eventName: 'SNAP_SCREENSHOT',
-          params: { id: @id },
-          ts: Timestamp.macro - view_duration
-        }
-      ]
-
-      @client.request_events(events, snap_data)
-    end
-
     def sent?
       !!media_id
-    end
-
-    def view(view_duration = 1)
-      snap_data = {
-        @id => { t: Timestamp.float, sv: view_duration }
-      }
-      events = [
-        {
-          eventName: 'SNAP_VIEW',
-          params: { id: @id },
-          ts: Timestamp.macro - view_duration
-        },
-        {
-          eventName: 'SNAP_EXPIRED',
-          params: { id: @id },
-          ts: Timestamp.macro
-        }
-      ]
-
-      @client.request_events(events, snap_data)
     end
 
     private
@@ -118,11 +73,6 @@ module Snapcat
       def none?
         @code == NONE
       end
-    end
-
-    def get_media
-      result = @client.request_media(@id)
-      Snapcat::Media.new(result.data[:media])
     end
   end
 end

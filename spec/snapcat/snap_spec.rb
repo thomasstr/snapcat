@@ -1,10 +1,6 @@
 require 'spec_helper'
 
 describe Snapcat::Snap do
-  before(:all) do
-    RequestStub.stub_snap
-  end
-
   describe '.new' do
     it 'converts fields' do
       skip 'need to set up snap_data'
@@ -39,45 +35,6 @@ describe Snapcat::Snap do
       )
 
       snap.status.code.must_equal snap.status
-    end
-  end
-
-  describe '#media' do
-    it 'retrieves media data' do
-      skip 'this works but still have issues with decrypt in test suite'
-      ux = UserExperience.new
-      ux.login
-      snap = ux.snap
-
-      media = snap.media
-
-      media.data.must_equal DataHelper.data_for(:decrypted)
-    end
-  end
-
-  describe '#screenshot' do
-    it 'records a screenshot' do
-      skip 'stubbing this one is annoying and its not working yet'
-      ux = UserExperience.new
-      ux.login
-      snap = ux.snap
-
-      result = snap.screenshot
-
-      result.success?.must_equal true
-    end
-  end
-
-  describe '#view' do
-    it 'records a view' do
-      skip 'stubbing this one is annoying and its not working yet'
-      ux = UserExperience.new
-      ux.login
-      snap = ux.snap
-
-      result = snap.view
-
-      result.success?.must_equal true
     end
   end
 end

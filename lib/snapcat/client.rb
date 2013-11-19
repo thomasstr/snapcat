@@ -1,128 +1,174 @@
 module Snapcat
   class Client
-    include HTTMultiParty
-
-    APP_VERSION = '6.0.0'
-    SECRET = 'iEk21fuwZApXlz93750dmW22pw389dPwOk'
-    STATIC_TOKEN = 'm198sOkJEn37DjqZ32lpRu76xmw288xSQ9'
-    HASH_PATTERN = '0001110111101110001111010101111011010001001110011000110001000110'
-
-    base_uri 'https://feelinsonice-hrd.appspot.com/bq/'
-
     attr_reader :user
 
     def initialize(username)
-      @auth_token = STATIC_TOKEN
-      @user = User.new(self)
-      @username = username
+      @user = User.new
+      @requestor = Requestor.new(username)
     end
 
-    def request(endpoint, data = {})
-      response = self.class.post(
-        "/#{endpoint}",
-        { body: merge_defaults_with(data) }
-      )
-
-      if data[:media_id]
-        additional_fields = { media_id: data[:media_id] }
-      else
-        additional_fields = {}
-      end
-      result = Snapcat::Response.new(response, additional_fields)
-
-      auth_token_from(result, endpoint)
-      result
-    end
-
-    def request_events(events, data = {})
-      request_with_username(
-        'update_snaps',
-        events: events,
-        json: data
+    def block(username)
+      @requestor.request_with_username(
+        'friend',
+        action: 'block',
+        friend: username
       )
     end
 
-    def request_media(snap_id)
-      response = self.class.post(
-        '/blob',
-        { body: merge_defaults_with({ id: snap_id, username: @username }) }
+    def clear_feed
+      @requestor.request_with_username('clear')
+    end
+
+    def fetch_updates(update_timestamp = 0)
+      set_user_data_with(@requestor.request_with_username(
+        'updates',
+        update_timestamp: update_timestamp
+      ))
+    end
+
+    def media_for(snap_id)
+      result = @requestor.request_media(snap_id)
+      Snapcat::Media.new(result.data[:media])
+    end
+
+    def delete_friend(username)
+      @requestor.request_with_username(
+        'friend',
+        action: 'delete',
+        friend: username
+      )
+    end
+
+    def set_display_name(username, display_name)
+      @requestor.request_with_username(
+        'friend',
+        action: 'display',
+        display: display_name,
+        friend: username
+      )
+    end
+
+    def login(password)
+      set_user_data_with(
+        @requestor.request_with_username('login', password: password)
+      )
+    end
+
+    def logout
+      @requestor.request_with_username('logout')
+    end
+
+    def register(password, birthday, email)
+      result = @requestor.request(
+        'register',
+        birthday: birthday,
+        email: email,
+        password: password
+      )
+      unless result.success?
+        return result
+      end
+
+      result_two = @requestor.request_with_username(
+        'registeru',
+        email: email
       )
 
-      Response.new(response)
+      set_user_data_with(result_two)
     end
 
-    def request_with_username(endpoint, data = {})
-      request(endpoint, data.merge({ username: @username }))
+    def screenshot(snap_id, view_duration = 1)
+      snap_data = {
+        snap_id => {
+          c: Status::SCREENSHOT,
+          sv: view_duration,
+          t: Timestamp.float
+        }
+      }
+      events = [
+        {
+          eventName: 'SNAP_SCREENSHOT',
+          params: { id: snap_id },
+          ts: Timestamp.macro - view_duration
+        }
+      ]
+
+      @requestor.request_events(events, snap_data)
     end
 
-    def request_upload(data, type = nil)
-      encrypted_data = Crypt.encrypt(data)
-      media = Media.new(encrypted_data)
+    def send_media(media_id, recipients, view_duration = 3)
+      @requestor.request_with_username(
+        'send',
+        media_id: media_id,
+        recipient: prepare_recipients(recipients),
+        time: view_duration
+      )
+    end
 
-      unless type
-        if media.image?
-          type = MediaType::IMAGE
-        elsif media.video?
-          type = MediaType::VIDEO
-        end
-      end
+    def unblock(username)
+      @requestor.request_with_username(
+        'friend',
+        action: 'unblock',
+        friend: username
+      )
+    end
 
-      media_id = generate_media_id
+    def view(snap_id, view_duration = 1)
+      snap_data = {
+        snap_id => { t: Timestamp.float, sv: view_duration }
+      }
+      events = [
+        {
+          eventName: 'SNAP_VIEW',
+          params: { id: snap_id },
+          ts: Timestamp.macro - view_duration
+        },
+        {
+          eventName: 'SNAP_EXPIRED',
+          params: { id: snap_id },
+          ts: Timestamp.macro
+        }
+      ]
 
-      begin
-        file = Tempfile.new(['snap', ".#{media.file_extension}"])
-        file.write(encrypted_data)
-        file.rewind
+      @requestor.request_events(events, snap_data)
+    end
 
-        result = request_with_username(
-          'upload',
-          data: file,
-          media_id: media_id,
-          type: type
-        )
-      ensure
-        file.close
-        file.unlink
-      end
+    def upload_media(data, type = nil)
+      @requestor.request_upload(data, type)
+    end
 
-      result
+    def update_email(email)
+      @requestor.request_with_username(
+        'settings',
+        action: 'updateEmail',
+        email: email
+      )
+    end
+
+    def update_privacy(code)
+      @requestor.request_with_username(
+        'settings',
+        action: 'updatePrivacy',
+        privacySetting: code
+      )
     end
 
     private
 
-    def auth_token_from(result, endpoint)
-      if endpoint == 'logout'
-        @auth_token = STATIC_TOKEN
+    def prepare_recipients(recipients)
+      if recipients.is_a? Array
+        recipients.join(',')
       else
-        @auth_token = result.auth_token || @auth_token
+        recipients
       end
     end
 
-    def built_token(auth_token, timestamp)
-      hash_a = Digest::SHA256.new << "#{SECRET}#{auth_token}"
-      hash_b = Digest::SHA256.new << "#{timestamp}#{SECRET}"
-
-      HASH_PATTERN.split(//).each_index.inject('') do |final_string, index|
-        if HASH_PATTERN[index] == '1'
-          final_string << hash_b.to_s[index].to_s
-        else
-          final_string << hash_a.to_s[index].to_s
-        end
+    def set_user_data_with(result)
+      if result.success?
+        @user.data = result.data
       end
-    end
 
-    def generate_media_id
-      "#{@username.upcase}~#{Timestamp.macro}"
-    end
-
-    def merge_defaults_with(data)
-      now = Timestamp.micro
-
-      data.merge!({
-        req_token: built_token(@auth_token, now),
-        timestamp: now,
-        version: APP_VERSION
-      })
+      result
     end
   end
 end

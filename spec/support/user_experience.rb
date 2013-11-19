@@ -25,7 +25,7 @@ class UserExperience
   end
 
   def login
-    @user.login(PASSWORD)
+    @client.login(PASSWORD)
   end
 
   def snap

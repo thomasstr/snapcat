@@ -2,39 +2,31 @@ module RequestStub
   extend WebMock::API
   extend self
 
-  BASE_URI = Snapcat::Client.base_uri
+  BASE_URI = Snapcat::Requestor.base_uri
   NOW = 1384635477196
   REQUEST_TOKEN = '9309075617c17ae86eefa3e6fca2e344f7e04d8419456a8299b4f814d7c5126b'
 
-  def stub_user
+  def stub_all
     stub_basics
     block
     clear_feed
+    delete
     fetch_updates
     logout
+    media
     register
     registeru
     send_snap_to_multiple
     send_snap_to_single
+    set_display_name
     unblock
     update_email
     update_privacy
     upload
   end
 
-  def stub_snap
-    stub_basics
-    media
-  end
-
-  def stub_friend
-    stub_basics
-    delete
-    set_display_name
-  end
-
   def upload
-    Snapcat::Client.any_instance.stubs(:generate_media_id).
+    Snapcat::Requestor.any_instance.stubs(:generate_media_id).
       returns(UserExperience::MEDIA_ID)
 
     request_body = requestify(
@@ -293,7 +285,7 @@ module RequestStub
     {
       req_token: REQUEST_TOKEN,
       timestamp: NOW,
-      version: Snapcat::Client::APP_VERSION
+      version: Snapcat::Requestor::APP_VERSION
     }
   end
 
@@ -318,7 +310,7 @@ module RequestStub
 
   def stub_auth
     Snapcat::Response.any_instance.stubs(:auth_token).returns(
-      Snapcat::Client::STATIC_TOKEN
+      Snapcat::Requestor::STATIC_TOKEN
     )
     Snapcat::Timestamp.stubs(:micro).returns(NOW)
   end

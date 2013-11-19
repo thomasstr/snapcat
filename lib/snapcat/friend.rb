@@ -9,7 +9,7 @@ module Snapcat
 
     attr_reader *ALLOWED_FIELD_CONVERSIONS.values
 
-    def initialize(client, username, data = {})
+    def initialize(data = {})
       ALLOWED_FIELD_CONVERSIONS.each do |api_field, human_field|
         # If there's a conflict, the human field overrides the api field
         instance_variable_set(
@@ -18,26 +18,7 @@ module Snapcat
         )
       end
 
-      @client = client
-      @username = username
       @type = Type.new(@type)
-    end
-
-    def delete
-      @client.request_with_username(
-        'friend',
-        action: 'delete',
-        friend: @username
-      )
-    end
-
-    def set_display_name(display_name)
-      @client.request_with_username(
-        'friend',
-        action: 'display',
-        display: display_name,
-        friend: @username
-      )
     end
 
     private
