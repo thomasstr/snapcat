@@ -116,9 +116,9 @@ describe Snapcat::Client do
       ux.login
 
       result = ux.client.send_media(
-        UserExperience::MEDIA_ID,
+        DataHelper.data_for(:decrypted),
         UserExperience::RECIPIENT,
-        UserExperience::VIEW_DURATION
+        view_duration: UserExperience::VIEW_DURATION
       )
 
       result.success?.must_equal true
@@ -129,9 +129,9 @@ describe Snapcat::Client do
       ux.login
 
       result = ux.client.send_media(
-        UserExperience::MEDIA_ID,
+        DataHelper.data_for(:decrypted),
         UserExperience::RECIPIENTS,
-        UserExperience::VIEW_DURATION
+        view_duration: UserExperience::VIEW_DURATION
       )
 
       result.success?.must_equal true
@@ -192,17 +192,6 @@ describe Snapcat::Client do
       ux.login
 
       result = ux.client.update_privacy(Snapcat::User::Privacy::EVERYONE)
-
-      result.success?.must_equal true
-    end
-  end
-
-  describe '#upload_media' do
-    it 'uploads a snap' do
-      ux = UserExperience.new
-      ux.login
-
-      result = ux.client.upload_media(DataHelper.data_for(:decrypted))
 
       result.success?.must_equal true
     end

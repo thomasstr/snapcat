@@ -96,12 +96,20 @@ module Snapcat
       @requestor.request_events(events, snap_data)
     end
 
-    def send_media(media_id, recipients, view_duration = 3)
+    def send_media(data, recipients, options = {})
+      result = @requestor.request_upload(data, options[:type])
+
+      unless result.success?
+        return result
+      end
+
+      media_id = result.data[:media_id]
+
       @requestor.request_with_username(
         'send',
         media_id: media_id,
         recipient: prepare_recipients(recipients),
-        time: view_duration
+        time: options[:view_duration] || 3
       )
     end
 
@@ -131,10 +139,6 @@ module Snapcat
       ]
 
       @requestor.request_events(events, snap_data)
-    end
-
-    def upload_media(data, type = nil)
-      @requestor.request_upload(data, type)
     end
 
     def update_email(email)

@@ -133,22 +133,19 @@ client.view(snap.id)
 ```
 
 **Sending Snaps**
+
 ```ruby
-# Upload the snap
-result = client.upload_media(media_file_data)
+# Send it to catsaregreat with 4 seconds duration
+# `data` is a string which can be read directly from an mp4 or jpg
+client.send_media(data, 'catsaregreat', view_duration: 4)
 
-# Grab the media ID
-media_id = result.data[:media_id]
-
-if result.success?
-  # Send it to catsaregreat with 4 seconds duration
-  client.send_media(media_id, 'catsaregreat', 4)
-  # Or send it to multiple recipients
-  # client.send_media(media_id, ['catsaregreat', 'ronnie99'], 4)
+# Or send it to multiple recipients
+client.send_media(data, ['catsaregreat', 'ronnie99'], view_duration: 4)
 end
 ```
 
 **Snaps General**
+
 ```ruby
 # Learn more about the snap
 snap.broadcast
