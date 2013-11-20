@@ -8,6 +8,8 @@ module Snapcat
     FRIEND_REQUEST_VIDEO = 5
     FRIEND_REQUEST_VIDEO_NOAUDIO = 6
 
+    attr_reader :code
+
     def initialize(code)
       @code = code
     end

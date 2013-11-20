@@ -19,14 +19,7 @@ module Snapcat
     attr_reader *ALLOWED_FIELD_CONVERSIONS.values
 
     def initialize(data = {})
-      ALLOWED_FIELD_CONVERSIONS.each do |api_field, human_field|
-        # Allow user-supplied human field to override api field
-        instance_variable_set(
-          "@#{human_field}",
-          data[human_field] || data[api_field]
-        )
-      end
-
+      humanize_data(data)
       @status = Status.new(@status)
       @media_type = MediaType.new(@media_type)
     end
@@ -40,6 +33,15 @@ module Snapcat
     end
 
     private
+
+    def humanize_data(data)
+      ALLOWED_FIELD_CONVERSIONS.each do |api_field, human_field|
+        instance_variable_set(
+          "@#{human_field}",
+          data[human_field] || data[api_field]
+        )
+      end
+    end
 
     class Status
       NONE = -1

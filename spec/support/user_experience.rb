@@ -3,6 +3,7 @@ class UserExperience
   EMAIL = 'meow@meow.com'
   FRIEND_DISPLAY_NAME = 'Henrie McKitten'
   FRIEND_USERNAME = 'catsaregreat'
+  FRIEND_TYPE = 0
   MEDIA_ID = 'ILUVKITTENS4~1384804683'
   MEDIA_TYPE = Snapcat::MediaType::IMAGE
   PASSWORD = 'topsecret'
