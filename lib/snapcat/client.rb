@@ -27,8 +27,7 @@ module Snapcat
     end
 
     def media_for(snap_id)
-      result = @requestor.request_media(snap_id)
-      Snapcat::Media.new(result.data[:media])
+      @requestor.request_media(snap_id)
     end
 
     def delete_friend(username)

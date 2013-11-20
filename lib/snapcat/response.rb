@@ -23,16 +23,20 @@ module Snapcat
     private
 
     def response_empty?(response)
-      !response.body || response.body.empty?
+      response.body.to_s.empty?
     end
 
     def formatted_result(response)
-      if response.content_type == 'application/octet-stream'
-        { media: response.body }
-      elsif response_empty?(response) || response.content_type != 'application/json'
+      if !response_empty?(response)
+        if response.content_type == 'application/octet-stream'
+          { media: Media.new(response.body) }
+        elsif response.content_type == 'application/json'
+          JSON.parse(response.body, { symbolize_names: true })
+        else
+          {}
+        end
+      else
         {}
-      elsif response.content_type == 'application/json'
-        JSON.parse(response.body, { symbolize_names: true })
       end
     end
   end
