@@ -19,6 +19,10 @@ module Snapcat
       end
     end
 
+    def generate_id(username)
+      "#{username.upcase}~#{Timestamp.macro}"
+    end
+
     def type_code
       @type.code
     end

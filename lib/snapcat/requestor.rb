@@ -53,7 +53,7 @@ module Snapcat
         return request_with_username(
           'upload',
           data: file,
-          media_id: media_id,
+          media_id: media.generate_id(@username),
           type: media.type_code
         )
       ensure
@@ -91,10 +91,6 @@ module Snapcat
           final_string << hash_a.to_s[index].to_s
         end
       end
-    end
-
-    def media_id
-      "#{@username.upcase}~#{Timestamp.macro}"
     end
 
     def merge_defaults_with(data)
