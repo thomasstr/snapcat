@@ -42,8 +42,7 @@ module Snapcat
 
     def request_upload(data, type = nil)
       encrypted_data = Crypt.encrypt(data)
-      media = Media.new(encrypted_data)
-      type = type_for(media, type)
+      media = Media.new(encrypted_data, type)
       file_extension = media.file_extension
 
       begin
@@ -55,7 +54,7 @@ module Snapcat
           'upload',
           data: file,
           media_id: media_id,
-          type: type
+          type: media.type_code
         )
       ensure
         file.close
@@ -106,16 +105,6 @@ module Snapcat
         timestamp: now,
         version: APP_VERSION
       })
-    end
-
-    def type_for(media, type)
-      unless type
-        if media.image?
-          MediaType::IMAGE
-        elsif media.video?
-          MediaType::VIDEO
-        end
-      end
     end
   end
 end

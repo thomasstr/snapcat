@@ -21,7 +21,7 @@ module Snapcat
     def initialize(data = {})
       humanize_data(data)
       @status = Status.new(@status)
-      @media_type = MediaType.new(@media_type)
+      @media_type = Media::Type.new(code: @media_type)
     end
 
     def received?

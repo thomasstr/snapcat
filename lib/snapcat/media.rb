@@ -2,12 +2,13 @@ module Snapcat
   class Media
     attr_reader :data
 
-    def initialize(data)
+    def initialize(data, type_code = nil)
       @data = Crypt.decrypt(data)
+      @type = Type.new(code: type_code, data: @data)
     end
 
     def image?
-      @data[0..1] == "\xFF\xD8".force_encoding('ASCII-8BIT')
+      @type.image?
     end
 
     def file_extension
@@ -18,12 +19,57 @@ module Snapcat
       end
     end
 
-    def valid?
-      image? || video?
+    def type_code
+      @type.code
     end
 
     def video?
-      @data[0..1] == "\x00\x00".force_encoding('ASCII-8BIT')
+      @type.video?
+    end
+
+    class Type
+      IMAGE = 0
+      VIDEO = 1
+      VIDEO_NOAUDIO = 2
+      FRIEND_REQUEST = 3
+      FRIEND_REQUEST_IMAGE = 4
+      FRIEND_REQUEST_VIDEO = 5
+      FRIEND_REQUEST_VIDEO_NOAUDIO = 6
+
+      attr_reader :code
+
+      def initialize(options = {})
+        @code = code_from(options[:code], options[:data])
+      end
+
+      def image?
+        [IMAGE, FRIEND_REQUEST_IMAGE].include? @code
+      end
+
+      def video?
+        [
+          VIDEO, VIDEO_NOAUDIO, FRIEND_REQUEST_VIDEO, FRIEND_REQUEST_VIDEO_NOAUDIO
+        ].include? @code
+      end
+
+      private
+
+      def code_from(code, data)
+        if code
+          code
+        else
+          code_from_data(data)
+        end
+      end
+
+      def code_from_data(data)
+        case data.to_s[0..1]
+        when "\x00\x00".force_encoding('ASCII-8BIT')
+          VIDEO
+        when "\xFF\xD8".force_encoding('ASCII-8BIT')
+          IMAGE
+        end
+      end
     end
   end
 end

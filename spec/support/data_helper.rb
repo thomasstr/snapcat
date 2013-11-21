@@ -3,7 +3,7 @@ module DataHelper
 
   def data_for(status, type = :image)
     File.open(
-      "#{SPEC_ROOT}/support/snaps/#{type}_#{status}.#{file_extension(type)}",
+      "#{SPEC_ROOT}/support/snaps/#{type}_#{status}#{file_extension(type)}",
       'rb'
     ).read
   end
@@ -12,9 +12,9 @@ module DataHelper
 
   def file_extension(type)
     if type == :image
-      'jpg'
+      '.jpg'
     elsif type == :video
-      'mp4'
+      '.mp4'
     end
   end
 end

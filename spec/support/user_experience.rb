@@ -5,7 +5,6 @@ class UserExperience
   FRIEND_USERNAME = 'catsaregreat'
   FRIEND_TYPE = 0
   MEDIA_ID = 'ILUVKITTENS4~1384804683'
-  MEDIA_TYPE = Snapcat::MediaType::IMAGE
   PASSWORD = 'topsecret'
   RECIPIENT = 'ronnie99'
   RECIPIENTS = %w(ronnie99 jimbo2000)

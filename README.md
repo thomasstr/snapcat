@@ -122,7 +122,6 @@ media = snapcat.media_for(snap.id)
 
 #Learn more about the media
 media.image?
-media.valid?
 media.video?
 
 # Record a screenshot taken of the snap
