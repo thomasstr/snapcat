@@ -77,6 +77,8 @@ module Snapcat
     end
 
     def screenshot(snap_id, view_duration = 1)
+      raise NotImplementedError
+
       snap_data = {
         snap_id => {
           c: Status::SCREENSHOT,
@@ -121,6 +123,8 @@ module Snapcat
     end
 
     def view(snap_id, view_duration = 1)
+      raise NotImplementedError
+
       snap_data = {
         snap_id => { t: Timestamp.float, sv: view_duration }
       }
