@@ -89,7 +89,7 @@ describe Snapcat::Client do
       ux = UserExperience.new
       ux.login
 
-      media = ux.client.snap_media_for(ux.snap.id)
+      media = ux.client.media_for(ux.snap.id)
 
       media.data.must_equal DataHelper.data_for(:decrypted)
     end
