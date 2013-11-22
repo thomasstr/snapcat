@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe Snapcat::Client do
-  before(:all) do
+  before(:each) do
     RequestStub.stub_all
   end
 

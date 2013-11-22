@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe Snapcat::Timestamp do
-  before(:all) do
+  before(:each) do
     fake_time = Time.at(1384635477.196865)
     Time.stubs(:now).returns(fake_time)
   end
