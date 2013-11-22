@@ -64,6 +64,14 @@ snapcat.update_email('newemail@example.com')
 #   Snapcat::User::Privacy::EVERYONE
 #   Snapcat::User::Privacy::FRIENDS
 snapcat.update_privacy(Snapcat::User::Privacy::EVERYONE)
+
+# Pro tip:
+#   Every call to the API responds with Snapcat::Response object with which
+#   you can check a few important things
+response = snapcat.block('username-to-block')
+response.code # => 200
+response.http_success # => true
+response.data # => { logged: true, ... }
 ```
 
 **User Data**
