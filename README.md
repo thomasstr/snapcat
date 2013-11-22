@@ -123,12 +123,6 @@ media = snapcat.media_for(snap.id)
 #Learn more about the media
 media.image?
 media.video?
-
-# Record a screenshot taken of the snap
-snapcat.screenshot(snap.id)
-
-# Record the snap being viewed
-snapcat.view(snap.id)
 ```
 
 **Sending Snaps**
