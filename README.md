@@ -1,5 +1,7 @@
 Snapcat
 =======
+[![Build Status](https://travis-ci.org/NealKemp/snapcat.png)](https://travis-ci.org/NealKemp/snapcat)
+
 
 A cat-tastic Ruby wrapper for the [Snapchat](http://snapchat.com) private API.
 Meow. This gem is designed to give you a friendly Ruby-like interface for
