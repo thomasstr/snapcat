@@ -1,5 +1,6 @@
 module Snapcat
   class Response
+    RECOGNIZED_CONTENT_TYPES = %w(application/json application/octet-stream)
     attr_reader :code, :data, :http_success
 
     def initialize(response, additional_fields = {})
@@ -22,22 +23,28 @@ module Snapcat
 
     private
 
-    def response_empty?(response)
-      response.body.to_s.empty?
+    def format_recognized_content(content_type, content)
+      if content_type == 'application/json'
+        JSON.parse(content, symbolize_names: true)
+      elsif content_type == 'application/octet-stream'
+        { media: Media.new(content) }
+      end
     end
 
     def formatted_result(response)
-      if !response_empty?(response)
-        if response.content_type == 'application/octet-stream'
-          { media: Media.new(response.body) }
-        elsif response.content_type == 'application/json'
-          JSON.parse(response.body, symbolize_names: true)
-        else
-          {}
-        end
+      if !response_empty?(response) && recognized_content_type?(response.content_type)
+        format_recognized_content(response.content_type, response.body)
       else
         {}
       end
+    end
+
+    def recognized_content_type?(content_type)
+      RECOGNIZED_CONTENT_TYPES.include? content_type
+    end
+
+    def response_empty?(response)
+      response.body.to_s.empty?
     end
   end
 end
