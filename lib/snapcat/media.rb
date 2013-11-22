@@ -1,7 +1,5 @@
 module Snapcat
   class Media
-    attr_reader :data
-
     def initialize(data, type_code = nil)
       @data = Crypt.decrypt(data)
       @type = Type.new(code: type_code, data: @data)
@@ -21,6 +19,10 @@ module Snapcat
 
     def generate_id(username)
       "#{username.upcase}~#{Timestamp.macro}"
+    end
+
+    def to_s
+      @data
     end
 
     def type_code

@@ -110,21 +110,6 @@ friend.type.blocked?
 friend.type.deleted?
 ```
 
-
-**Received Snaps**
-
-```ruby
-# Grab a snap
-snap = user.snaps_received.first
-
-# Get the snap image or video data
-media = snapcat.media_for(snap.id)
-
-#Learn more about the media
-media.image?
-media.video?
-```
-
 **Sending Snaps**
 
 ```ruby
@@ -134,6 +119,26 @@ snapcat.send_media(data, 'catsaregreat')
 
 # Or send it to multiple recipients and override default view_duration
 snapcat.send_media(data, %w(catsaregreat ronnie99), view_duration: 4)
+```
+
+**Received Snaps**
+
+```ruby
+# Grab a snap
+snap = user.snaps_received.first
+
+# Get the snap image or video data
+media_response = snapcat.media_for(snap.id)
+media = media_response.data[:media]
+
+# Learn more about the media
+media.image?
+media.video?
+media.file_extension
+media.type_code
+
+# Get the data from the media object
+media.to_s
 ```
 
 **Snaps General**
