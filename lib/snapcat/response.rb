@@ -1,6 +1,6 @@
 module Snapcat
   class Response
-    attr_reader :data
+    attr_reader :code, :data, :http_success
 
     def initialize(response, additional_fields = {})
       @data = formatted_result(response).merge(additional_fields)
@@ -31,7 +31,7 @@ module Snapcat
         if response.content_type == 'application/octet-stream'
           { media: Media.new(response.body) }
         elsif response.content_type == 'application/json'
-          JSON.parse(response.body, { symbolize_names: true })
+          JSON.parse(response.body, symbolize_names: true)
         else
           {}
         end
