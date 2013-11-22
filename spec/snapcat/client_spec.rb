@@ -10,7 +10,7 @@ describe Snapcat::Client do
       ux = UserExperience.new
       ux.login
 
-      result = ux.client.block(UserExperience::FRIEND_USERNAME)
+      result = ux.client.block(Fixture::FRIEND_USERNAME)
 
       result.success?.must_equal true
     end
@@ -54,7 +54,7 @@ describe Snapcat::Client do
     it 'logs the user in' do
       ux = UserExperience.new
 
-      result = ux.client.login(UserExperience::PASSWORD)
+      result = ux.client.login(Fixture::PASSWORD)
 
       result.success?.must_equal true
     end
@@ -63,7 +63,7 @@ describe Snapcat::Client do
       ux = UserExperience.new
       user = ux.user
 
-      ux.client.login(UserExperience::PASSWORD)
+      ux.client.login(Fixture::PASSWORD)
 
       user.friends.length.must_equal 4
       user.snaps_received.length.must_equal 1
@@ -101,9 +101,9 @@ describe Snapcat::Client do
       ux = UserExperience.new
 
       result = ux.client.register(
-        UserExperience::PASSWORD,
-        UserExperience::BIRTHDAY,
-        UserExperience::EMAIL
+        Fixture::PASSWORD,
+        Fixture::BIRTHDAY,
+        Fixture::EMAIL
       )
 
       result.success?.must_equal true
@@ -119,8 +119,8 @@ describe Snapcat::Client do
 
         result = ux.client.send_media(
           DataHelper.data_for(:decrypted),
-          UserExperience::RECIPIENT,
-          view_duration: UserExperience::VIEW_DURATION
+          Fixture::RECIPIENT,
+          view_duration: Fixture::VIEW_DURATION
         )
 
         result.success?.must_equal true
@@ -135,8 +135,8 @@ describe Snapcat::Client do
 
         result = ux.client.send_media(
           DataHelper.data_for(:decrypted),
-          UserExperience::RECIPIENTS,
-          view_duration: UserExperience::VIEW_DURATION
+          Fixture::RECIPIENTS,
+          view_duration: Fixture::VIEW_DURATION
         )
 
         result.success?.must_equal true
@@ -163,7 +163,7 @@ describe Snapcat::Client do
 
       result = ux.client.set_display_name(
         ux.friend.username,
-        UserExperience::FRIEND_DISPLAY_NAME
+        Fixture::FRIEND_DISPLAY_NAME
       )
 
       result.success?.must_equal true
@@ -175,7 +175,7 @@ describe Snapcat::Client do
       ux = UserExperience.new
       ux.login
 
-      result = ux.client.unblock(UserExperience::FRIEND_USERNAME)
+      result = ux.client.unblock(Fixture::FRIEND_USERNAME)
 
       result.success?.must_equal true
     end
@@ -186,7 +186,7 @@ describe Snapcat::Client do
       ux = UserExperience.new
       ux.login
 
-      result = ux.client.update_email(UserExperience::EMAIL)
+      result = ux.client.update_email(Fixture::EMAIL)
 
       result.success?.must_equal true
     end

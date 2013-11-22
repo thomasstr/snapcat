@@ -27,7 +27,7 @@ module RequestStub
 
   def upload
     Snapcat::Requestor.any_instance.stubs(:generate_media_id).
-      returns(UserExperience::MEDIA_ID)
+      returns(Fixture::MEDIA_ID)
 
     request_body = requestify(
       {
@@ -47,9 +47,9 @@ module RequestStub
   def send_snap_to_multiple
     request_body = requestify(
       {
-        media_id: UserExperience::MEDIA_ID,
-        recipient: UserExperience::RECIPIENTS.join(','),
-        time: UserExperience::VIEW_DURATION
+        media_id: Fixture::MEDIA_ID,
+        recipient: Fixture::RECIPIENTS.join(','),
+        time: Fixture::VIEW_DURATION
       },
       username: true
     )
@@ -65,9 +65,9 @@ module RequestStub
   def send_snap_to_single
     request_body = requestify(
       {
-        media_id: UserExperience::MEDIA_ID,
-        recipient: UserExperience::RECIPIENT,
-        time: UserExperience::VIEW_DURATION
+        media_id: Fixture::MEDIA_ID,
+        recipient: Fixture::RECIPIENT,
+        time: Fixture::VIEW_DURATION
       },
       username: true
     )
@@ -81,7 +81,7 @@ module RequestStub
   end
 
   def media
-    request_body = requestify({ id: UserExperience::SNAP_ID }, username: true)
+    request_body = requestify({ id: Fixture::SNAP_ID }, username: true)
     stub_request(:post, "#{BASE_URI}/blob").with(
       body: request_body
     ).to_return(
@@ -95,7 +95,7 @@ module RequestStub
     request_body = requestify(
       {
         action: 'block',
-        friend: UserExperience::FRIEND_USERNAME
+        friend: Fixture::FRIEND_USERNAME
       },
       username: true
     )
@@ -121,7 +121,7 @@ module RequestStub
 
   def login
     request_body = requestify(
-      { password: UserExperience::PASSWORD },
+      { password: Fixture::PASSWORD },
       username: true
     )
     stub_request(:post, "#{BASE_URI}/login").with(
@@ -148,7 +148,7 @@ module RequestStub
     request_body = requestify(
       {
         action: 'delete',
-        friend: UserExperience::FRIEND_USERNAME
+        friend: Fixture::FRIEND_USERNAME
       },
       username: true
     )
@@ -165,8 +165,8 @@ module RequestStub
     request_body = requestify(
       {
         action: 'display',
-        display: UserExperience::FRIEND_DISPLAY_NAME,
-        friend: UserExperience::FRIEND_USERNAME
+        display: Fixture::FRIEND_DISPLAY_NAME,
+        friend: Fixture::FRIEND_USERNAME
       },
       username: true
     )
@@ -182,9 +182,9 @@ module RequestStub
   def register
     request_body = requestify(
       {
-        birthday: UserExperience::BIRTHDAY,
-        email: UserExperience::EMAIL,
-        password: UserExperience::PASSWORD
+        birthday: Fixture::BIRTHDAY,
+        email: Fixture::EMAIL,
+        password: Fixture::PASSWORD
       }
     )
     stub_request(:post, "#{BASE_URI}/register").with(
@@ -199,7 +199,7 @@ module RequestStub
   def registeru
     request_body = requestify(
       {
-        email: UserExperience::EMAIL
+        email: Fixture::EMAIL
       },
       username: true
     )
@@ -232,7 +232,7 @@ module RequestStub
     request_body = requestify(
       {
         action: 'updateEmail',
-        email: UserExperience::EMAIL
+        email: Fixture::EMAIL
       },
       username: true
     )
@@ -249,7 +249,7 @@ module RequestStub
     request_body = requestify(
       {
         action: 'unblock',
-        friend: UserExperience::FRIEND_USERNAME
+        friend: Fixture::FRIEND_USERNAME
       },
       username: true
     )
@@ -295,7 +295,7 @@ module RequestStub
 
   def requestify(data, options = {})
     if options[:username]
-      data.merge!({ username: UserExperience::USERNAME })
+      data.merge!({ username: Fixture::USERNAME })
     end
 
     data.merge!(default_request_hash)
