@@ -47,7 +47,7 @@ module Snapcat
 
       begin
         file = Tempfile.new(['snap', ".#{file_extension}"])
-        file.write(encrypted_data)
+        file.write(encrypted_data.force_encoding('utf-8'))
         file.rewind
 
         return request_with_username(
