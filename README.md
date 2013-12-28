@@ -1,6 +1,6 @@
 Snapcat
 =======
-[![Build Status](https://travis-ci.org/NealKemp/snapcat.png)](https://travis-ci.org/NealKemp/snapcat)
+[![Build Status](https://travis-ci.org/nneal/snapcat.png)](https://travis-ci.org/nneal/snapcat)
 
 
 A cat-tastic Ruby wrapper for the [Snapchat](http://snapchat.com) private API.
