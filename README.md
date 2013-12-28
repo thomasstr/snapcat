@@ -98,6 +98,9 @@ user.friends
 **Friends**
 
 ```ruby
+# Add a new friend
+snapcat.add_friend("mybestbuddy")
+
 # Grab a friend
 friend = user.friends.first
 
