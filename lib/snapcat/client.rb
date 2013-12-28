@@ -38,6 +38,14 @@ module Snapcat
       )
     end
 
+    def add_friend(username)
+      @requestor.request_with_username(
+        'friend',
+        action: 'add',
+        friend: username
+      )
+    end
+
     def set_display_name(username, display_name)
       @requestor.request_with_username(
         'friend',

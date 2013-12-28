@@ -38,6 +38,17 @@ describe Snapcat::Client do
     end
   end
 
+  describe '#add_friends' do
+    it 'adds this friend' do
+      ux = UserExperience.new
+      ux.login
+
+      result = ux.client.add_friend(ux.friend.username)
+
+      result.success?.must_equal true
+    end
+  end
+
   describe '#fetch_updates' do
     it 'resets all of the users update fields' do
       ux = UserExperience.new
