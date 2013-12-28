@@ -10,7 +10,8 @@ module RequestStub
     stub_basics
     block
     clear_feed
-    delete
+    delete_friend
+    add_friend
     fetch_updates
     logout
     media
@@ -144,7 +145,7 @@ module RequestStub
     )
   end
 
-  def delete
+  def delete_friend
     request_body = requestify(
       {
         action: 'delete',
@@ -157,6 +158,23 @@ module RequestStub
     ).to_return(
       status: 200,
       body: ResponseHelper.json_for(:delete),
+      headers: json_headers
+    )
+  end
+
+  def add_friend
+    request_body = requestify(
+      {
+        action: 'add',
+        friend: Fixture::FRIEND_USERNAME
+      },
+      username: true
+    )
+    stub_request(:post, "#{BASE_URI}/friend").with(
+      body: request_body
+    ).to_return(
+      status: 200,
+      body: ResponseHelper.json_for(:add),
       headers: json_headers
     )
   end
