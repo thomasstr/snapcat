@@ -99,7 +99,7 @@ user.friends
 
 ```ruby
 # Add a new friend
-snapcat.add_friend("mybestbuddy")
+snapcat.add_friend('mybestbuddy')
 
 # Grab a friend
 friend = user.friends.first
