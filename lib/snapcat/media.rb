@@ -5,16 +5,12 @@ module Snapcat
       @type = Type.new(code: type_code, data: @data)
     end
 
-    def image?
-      @type.image?
+    def file_extension
+      @type.file_extension
     end
 
-    def file_extension
-      if image?
-        'jpg'
-      elsif video?
-        'mp4'
-      end
+    def image?
+      @type.image?
     end
 
     def generate_id(username)
@@ -46,6 +42,14 @@ module Snapcat
 
       def initialize(options = {})
         @code = code_from(options[:code], options[:data])
+      end
+
+      def file_extension
+        if image?
+          'jpg'
+        elsif video?
+          'mp4'
+        end
       end
 
       def image?
