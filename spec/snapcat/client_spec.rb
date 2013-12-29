@@ -157,7 +157,7 @@ describe Snapcat::Client do
 
   describe '#screenshot' do
     it 'records a screenshot' do
-      skip 'stubbing this one is annoying and its not working yet'
+      skip 'stubbing this one is annoying'
       ux = UserExperience.new
       ux.login
 
@@ -216,7 +216,7 @@ describe Snapcat::Client do
 
   describe '#view' do
     it 'records a view' do
-      skip 'stubbing this one is annoying and its not working yet'
+      skip 'stubbing this one is annoying'
       ux = UserExperience.new
       ux.login
 

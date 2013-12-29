@@ -144,6 +144,14 @@ snap = user.snaps_received.first
 media_response = snapcat.media_for(snap.id)
 media = media_response.data[:media]
 
+# Record a view
+snapcat.view(snap.id)
+
+# Record a screenshot
+snapcat.screenshot(snap.id)
+
+# Record a screenshot
+
 # Learn more about the media
 media.image?
 media.video?

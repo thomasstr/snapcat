@@ -85,11 +85,9 @@ module Snapcat
     end
 
     def screenshot(snap_id, view_duration = 1)
-      raise NotImplementedError
-
       snap_data = {
         snap_id => {
-          c: Status::SCREENSHOT,
+          c: Snap::Status::SCREENSHOT,
           sv: view_duration,
           t: Timestamp.float
         }
@@ -102,7 +100,11 @@ module Snapcat
         }
       ]
 
-      request_events(events, snap_data)
+      @requestor.request_with_username(
+        'update_snaps',
+        events: events.to_json,
+        json: snap_data.to_json
+      )
     end
 
     def send_media(data, recipients, options = {})
@@ -131,8 +133,6 @@ module Snapcat
     end
 
     def view(snap_id, view_duration = 1)
-      raise NotImplementedError
-
       snap_data = {
         snap_id => { t: Timestamp.float, sv: view_duration }
       }
@@ -149,7 +149,11 @@ module Snapcat
         }
       ]
 
-      request_events(events, snap_data)
+      @requestor.request_with_username(
+        'update_snaps',
+        events: events.to_json,
+        json: snap_data.to_json
+      )
     end
 
     def update_email(email)
