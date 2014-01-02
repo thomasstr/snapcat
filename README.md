@@ -181,6 +181,20 @@ snap.sent
 snap.opened
 ```
 
+**Advanced User Auth**
+
+The standard `login` method will log out all other sessions. If you want to use
+Snapcat in multiple concurrent processes, you need to share this token across
+processes and set it manually.
+
+```ruby
+# Fetch token
+snapcat.client.auth_token
+
+# Set token
+snapcat.client.auth_token = '1c7e8f83-1379-4694-8fa9-4cab6b73f0d4'
+```
+
 
 Contributing
 ------------

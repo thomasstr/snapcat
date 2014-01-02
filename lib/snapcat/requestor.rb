@@ -7,6 +7,8 @@ module Snapcat
     STATIC_TOKEN = 'm198sOkJEn37DjqZ32lpRu76xmw288xSQ9'
     HASH_PATTERN = '0001110111101110001111010101111011010001001110011000110001000110'
 
+    attr_accessor :auth_token
+
     base_uri 'https://feelinsonice-hrd.appspot.com/bq/'
 
     def initialize(username)

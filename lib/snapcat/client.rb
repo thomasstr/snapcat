@@ -7,6 +7,14 @@ module Snapcat
       @requestor = Requestor.new(username)
     end
 
+    def auth_token
+      @requestor.auth_token
+    end
+
+    def auth_token=(auth_token)
+      @requestor.auth_token = auth_token
+    end
+
     def block(username)
       @requestor.request_with_username(
         'friend',

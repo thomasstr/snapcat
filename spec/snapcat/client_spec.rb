@@ -5,6 +5,28 @@ describe Snapcat::Client do
     RequestStub.stub_all
   end
 
+  describe '#auth_token' do
+    it 'returns the requestors auth token' do
+      ux = UserExperience.new
+      ux.login
+
+      auth_token = ux.client.auth_token
+
+      auth_token.must_equal Snapcat::Requestor::STATIC_TOKEN
+    end
+  end
+
+  describe '#auth_token=' do
+    it 'set the requestors auth token' do
+      ux = UserExperience.new
+      ux.login
+
+      ux.client.auth_token = 'imatoken'
+
+      ux.client.auth_token.must_equal 'imatoken'
+    end
+  end
+
   describe '#block' do
     it 'blocks a user' do
       ux = UserExperience.new
