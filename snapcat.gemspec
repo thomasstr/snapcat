@@ -4,7 +4,7 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 
 Gem::Specification.new do |spec|
   spec.name = 'snapcat'
-  spec.version = '0.0.5'
+  spec.version = '0.1.0'
   spec.authors = ['Neal Kemp']
   spec.email = ['']
   spec.description = %q{Snapchat API wrapper}
