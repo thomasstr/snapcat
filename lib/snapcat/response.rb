@@ -24,9 +24,9 @@ module Snapcat
     private
 
     def format_recognized_content(content_type, content)
-      if content_type == 'application/json'
+      if content_type.include? 'application/json'
         JSON.parse(content, symbolize_names: true)
-      elsif content_type == 'application/octet-stream'
+      elsif content_type.include? 'application/octet-stream'
         { media: Media.new(content) }
       end
     end
@@ -40,7 +40,9 @@ module Snapcat
     end
 
     def recognized_content_type?(content_type)
-      RECOGNIZED_CONTENT_TYPES.include? content_type
+      RECOGNIZED_CONTENT_TYPES.detect do |recognized_content_type|
+        content_type.include? recognized_content_type
+      end
     end
 
     def response_empty?(response)
