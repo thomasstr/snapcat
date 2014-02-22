@@ -36,7 +36,7 @@ snapcat.login('topsecretpassword')
 
 # Initialize a new client, register, and login
 snapcat = Snapcat::Client.new('your-new-username')
-snapcat.register('topsecretpassword', '1990-01-20', 'test@example.com')
+snapcat.register('test@example.com', 'topsecretpassword', 24, '1990-01-20')
 
 # Logout
 snapcat.logout

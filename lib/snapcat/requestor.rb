@@ -64,19 +64,6 @@ module Snapcat
       end
     end
 
-    def built_token(auth_token, timestamp)
-      hash_a = Digest::SHA256.new << "#{SECRET}#{auth_token}"
-      hash_b = Digest::SHA256.new << "#{timestamp}#{SECRET}"
-
-      HASH_PATTERN.split(//).each_index.inject('') do |final_string, index|
-        if HASH_PATTERN[index] == '1'
-          final_string << hash_b.to_s[index].to_s
-        else
-          final_string << hash_a.to_s[index].to_s
-        end
-      end
-    end
-
     private
 
     def additional_fields_for(data)
@@ -92,6 +79,19 @@ module Snapcat
         @auth_token = STATIC_TOKEN
       else
         @auth_token = result.auth_token || @auth_token
+      end
+    end
+
+    def built_token(auth_token, timestamp)
+      hash_a = Digest::SHA256.new << "#{SECRET}#{auth_token}"
+      hash_b = Digest::SHA256.new << "#{timestamp}#{SECRET}"
+
+      HASH_PATTERN.split(//).each_index.inject('') do |final_string, index|
+        if HASH_PATTERN[index] == '1'
+          final_string << hash_b.to_s[index].to_s
+        else
+          final_string << hash_a.to_s[index].to_s
+        end
       end
     end
 

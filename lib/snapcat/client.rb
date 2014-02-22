@@ -74,12 +74,8 @@ module Snapcat
     end
 
     def register(email, password, age, birthday)
-      now = Timestamp.micro
-
       result = @requestor.request(
         'register',
-        #timestamp: now,
-        #req_token: @requestor.built_token(@auth_token, now),
         email: email,
         password: password,
         age: age,

@@ -4,7 +4,6 @@ class UserExperience
   def initialize
     @client = Snapcat::Client.new(Fixture::USERNAME)
     @user = @client.user
-    @requestor = Snapcat::Requestor.new(@user)
   end
 
   def friend

@@ -2,15 +2,13 @@ module Fixture
   extend self
 
   BIRTHDAY = '1990-01-30'
-  AGE = 24
   EMAIL = 'meow@meow.com'
+  AGE = 24
   FRIEND_DISPLAY_NAME = 'Henrie McKitten'
   FRIEND_USERNAME = 'catsaregreat'
   FRIEND_TYPE = Snapcat::Friend::Type::CONFIRMED
   MEDIA_ID = 'ILUVKITTENS4~1384804683'
   PASSWORD = 'topsecret'
-  TIMESTAMP = 1373207221
-  STATIC_TOKEN = Snapcat::Requestor::STATIC_TOKEN
   RECIPIENT = 'ronnie99'
   RECIPIENTS = %w(ronnie99 jimbo2000)
   SNAP_ID = '519861384740350100r'
