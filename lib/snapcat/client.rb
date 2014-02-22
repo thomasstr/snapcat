@@ -74,11 +74,15 @@ module Snapcat
     end
 
     def register(password, birthday, email)
+      timestamp = Time.now.to_i
       result = @requestor.request(
         'register',
-        birthday: birthday,
+        timestamp: timestamp,
+        req_token: "create_token(#{auth_token}, #{timestamp})",
         email: email,
-        password: password
+        password: password,
+        age: age
+        birthday: birthday
       )
       unless result.success?
         return result
