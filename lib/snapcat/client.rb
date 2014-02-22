@@ -4,7 +4,7 @@ module Snapcat
 
     def initialize(username)
       @user = User.new
-      @requestor = Requestor.new(username)
+      @requestor = Requestor.new(username).built_token(@auth_token, Time.now.to_i)
     end
 
     def auth_token
