@@ -73,7 +73,7 @@ module Snapcat
       @requestor.request_with_username('logout')
     end
 
-    def register(password, birthday, email)
+    def register(password, birthday, age, email)
       timestamp = Time.now.to_i
       result = @requestor.request(
         'register',
