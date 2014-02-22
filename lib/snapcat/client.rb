@@ -81,7 +81,7 @@ module Snapcat
         req_token: "create_token(#{auth_token}, #{timestamp})",
         email: email,
         password: password,
-        age: age
+        age: age,
         birthday: birthday
       )
       unless result.success?
