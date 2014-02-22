@@ -200,9 +200,10 @@ module RequestStub
   def register
     request_body = requestify(
       {
-        birthday: Fixture::BIRTHDAY,
         email: Fixture::EMAIL,
-        password: Fixture::PASSWORD
+        password: Fixture::PASSWORD,
+        age: Fixture::AGE,
+        birthday: Fixture::BIRTHDAY
       }
     )
     stub_request(:post, "#{BASE_URI}/register").with(
