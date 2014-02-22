@@ -73,12 +73,14 @@ module Snapcat
       @requestor.request_with_username('logout')
     end
 
-    def register(password, birthday, age, email)
-      timestamp = Time.now.to_i
+    def register(email, password, age, birthday)
+      now = Timestamp.micro
+      build_token = Snapcat::Requestor.new
+
       result = @requestor.request(
         'register',
-        timestamp: timestamp,
-        req_token: "create_token(#{auth_token}, #{timestamp})",
+        timestamp: now,
+        req_token: @requestor.built_token(@auth_token, now),
         email: email,
         password: password,
         age: age,

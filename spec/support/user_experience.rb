@@ -1,9 +1,10 @@
 class UserExperience
-  attr_reader :client, :user
+  attr_reader :client, :user, :requestor
 
   def initialize
     @client = Snapcat::Client.new(Fixture::USERNAME)
     @user = @client.user
+    @requestor = Snapcat::Requestor.new(@user)
   end
 
   def friend
