@@ -202,7 +202,9 @@ module RequestStub
       {
         birthday: Fixture::BIRTHDAY,
         email: Fixture::EMAIL,
-        password: Fixture::PASSWORD
+        password: Fixture::PASSWORD,
+        age: Fixture::AGE
+
       }
     )
     stub_request(:post, "#{BASE_URI}/register").with(

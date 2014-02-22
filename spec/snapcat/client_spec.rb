@@ -136,7 +136,8 @@ describe Snapcat::Client do
       result = ux.client.register(
         Fixture::PASSWORD,
         Fixture::BIRTHDAY,
-        Fixture::EMAIL
+        Fixture::EMAIL,
+        Fixture::AGE
       )
 
       result.success?.must_equal true

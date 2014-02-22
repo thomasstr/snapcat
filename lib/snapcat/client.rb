@@ -73,12 +73,13 @@ module Snapcat
       @requestor.request_with_username('logout')
     end
 
-    def register(password, birthday, email)
+    def register(password, birthday, email, age)
       result = @requestor.request(
         'register',
         birthday: birthday,
         email: email,
-        password: password
+        password: password,
+        age: age
       )
       unless result.success?
         return result

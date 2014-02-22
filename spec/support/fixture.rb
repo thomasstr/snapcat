@@ -3,6 +3,7 @@ module Fixture
 
   BIRTHDAY = '1990-01-30'
   EMAIL = 'meow@meow.com'
+  AGE = 24
   FRIEND_DISPLAY_NAME = 'Henrie McKitten'
   FRIEND_USERNAME = 'catsaregreat'
   FRIEND_TYPE = Snapcat::Friend::Type::CONFIRMED
