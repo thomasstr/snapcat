@@ -133,8 +133,8 @@ describe Snapcat::Client do
     it 'allows a user to register' do
       ux = UserExperience.new
       result = ux.client.register(
-        Fixture::TIMESTAMP,
-        ux.requestor.built_token(Fixture::STATIC_TOKEN, Fixture::TIMESTAMP),
+        #Fixture::TIMESTAMP,
+        #ux.requestor.built_token(Fixture::STATIC_TOKEN, Fixture::TIMESTAMP),
         Fixture::EMAIL,
         Fixture::PASSWORD,
         Fixture::AGE,
