@@ -133,6 +133,23 @@ module Snapcat
       )
     end
 
+    # Adding method for adding to My Story
+    def send_media_my_story(data, options = {})
+      result = @requestor.request_upload(data, options[:type])
+
+      unless result.success?
+        return result
+      end
+
+      media_id = result.data[:media_id]
+
+      @requestor.request_with_username(
+        'post_story',
+        media_id: media_id,
+        time: options[:view_duration] || 3
+        )
+    end
+
     def unblock(username)
       @requestor.request_with_username(
         'friend',
