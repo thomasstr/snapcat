@@ -146,8 +146,10 @@ module Snapcat
       @requestor.request_with_username(
         'post_story',
         media_id: media_id,
+        client_id: media_id,
+        type: 0,
         time: options[:view_duration] || 3
-        )
+      )
     end
 
     def unblock(username)
